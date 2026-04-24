@@ -1,17 +1,27 @@
 import { Routes } from '@angular/router';
 import { MonturaListComponent } from './features/montura-list/montura-list';
 import { MonturaDetailComponent } from './features/montura-detail/montura-detail';
+import { LoginComponent } from './features/auth/login/login';
+// IMPORTANTE: Importamos nuestro nuevo candado
+import { authGuard } from './core/guards/auth-guard';
 
 export const routes: Routes = [
-  // 1. Ruta por defecto: si entran a la raíz, los enviamos al catálogo
-  { path: '', redirectTo: 'catalogo', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   
-  // 2. Ruta de la lista: mostrará todas las monturas (y leerá Query Params)
-  { path: 'catalogo', component: MonturaListComponent },
+  // El login es público, no lleva candado
+  { path: 'login', component: LoginComponent },
   
-  // 3. Ruta de detalle: el ":id" es un parámetro dinámico
-  { path: 'catalogo/:id', component: MonturaDetailComponent },
+  // Protegemos el catálogo y el detalle con canActivate
+  { 
+    path: 'catalogo', 
+    component: MonturaListComponent,
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'catalogo/:id', 
+    component: MonturaDetailComponent,
+    canActivate: [authGuard] 
+  },
   
-  // 4. Ruta comodín (opcional, buena práctica): si escriben mal la URL, los manda al catálogo
-  { path: '**', redirectTo: 'catalogo' }
+  { path: '**', redirectTo: 'login' }
 ];
