@@ -6,12 +6,18 @@ import { LoginComponent } from './features/auth/login/login';
 import { authGuard } from './core/guards/auth-guard';
 import { PacienteRegistroComponent } from './features/pacientes/paciente-registro/paciente-registro';
 import { PacienteListComponent } from './features/pacientes/paciente-list/paciente-list';
+import { OrdenListComponent } from './features/ordenes/orden-list/orden-list';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
     { 
     path: 'nuevo-paciente', 
     component: PacienteRegistroComponent,
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'pedidos', 
+    component: OrdenListComponent,
     canActivate: [authGuard] 
   },
   

@@ -1,0 +1,66 @@
+<div style="max-width: 1100px; margin: 0 auto; padding-bottom: 2rem;">
+  <mat-card style="padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    
+    <mat-card-header style="margin-bottom: 1.5rem;">
+      <mat-card-title style="color: #1976d2; font-size: 1.8rem;">Seguimiento de Órdenes de Trabajo</mat-card-title>
+      <mat-card-subtitle>Gestión de estados y trazabilidad de pedidos para laboratorio</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      @if (ordenes$ | async; as ordenes) {
+        
+        <table mat-table [dataSource]="ordenes" style="width: 100%;">
+          
+          <ng-container matColumnDef="fecha">
+            <th mat-header-cell *matHeaderCellDef> Fecha </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.fechaEmision | date:'dd/MM/yyyy HH:mm' }} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="paciente">
+            <th mat-header-cell *matHeaderCellDef> Paciente </th>
+            <td mat-cell *matCellDef="let orden"> 
+              <strong>{{ orden.paciente.nombre }}</strong><br>
+              <small style="color: #666;">DNI: {{ orden.paciente.dni }}</small>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="montura">
+            <th mat-header-cell *matHeaderCellDef> Montura </th>
+            <td mat-cell *matCellDef="let orden"> {{ orden.montura.marca }} - {{ orden.montura.modelo }} </td>
+          </ng-container>
+
+            <ng-container matColumnDef="estado">
+            <th mat-header-cell *matHeaderCellDef> Estado Actual </th>
+            <td mat-cell *matCellDef="let orden"> 
+              <span [ngStyle]="getEstadoStyle(orden.estado)">
+                {{ orden.estado }}
+              </span>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acciones">
+            <th mat-header-cell *matHeaderCellDef> Actualizar </th>
+            <td mat-cell *matCellDef="let orden">
+              <mat-form-field appearance="outline" style="width: 150px; margin-top: 15px;">
+                <mat-select [value]="orden.estado" (selectionChange)="cambiarEstado(orden.id, $event.value)">
+                  @for (est of estados; track est) {
+                    <mat-option [value]="est">{{ est }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnas"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnas;"></tr>
+        </table>
+
+        @if (ordenes.length === 0) {
+          <div style="text-align: center; padding: 3rem; color: #757575;">
+            <p style="font-size: 1.2rem;">No hay ventas u órdenes registradas aún.</p>
+          </div>
+        }
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
