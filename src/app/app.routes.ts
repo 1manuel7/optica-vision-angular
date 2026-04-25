@@ -4,12 +4,24 @@ import { MonturaDetailComponent } from './features/montura-detail/montura-detail
 import { LoginComponent } from './features/auth/login/login';
 // IMPORTANTE: Importamos nuestro nuevo candado
 import { authGuard } from './core/guards/auth-guard';
+import { PacienteRegistroComponent } from './features/pacientes/paciente-registro/paciente-registro';
+import { PacienteListComponent } from './features/pacientes/paciente-list/paciente-list';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
+    { 
+    path: 'nuevo-paciente', 
+    component: PacienteRegistroComponent,
+    canActivate: [authGuard] 
+  },
   
   // El login es público, no lleva candado
   { path: 'login', component: LoginComponent },
+  { 
+    path: 'directorio', 
+    component: PacienteListComponent,
+    canActivate: [authGuard] 
+  },
   
   // Protegemos el catálogo y el detalle con canActivate
   { 
@@ -23,5 +35,7 @@ export const routes: Routes = [
     canActivate: [authGuard] 
   },
   
-  { path: '**', redirectTo: 'login' }
+  { path: '**', redirectTo: 'login' },
+
+
 ];

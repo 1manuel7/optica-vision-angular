@@ -14,11 +14,16 @@
     <p style="font-size: 2rem; font-weight: 500; color: #1976d2; margin: 1.5rem 0 0.5rem 0;">
       S/ {{ montura.precio }}
     </p>
+
+    @if (montura.stock > 0) {
+      <p style="color: #2e7d32; font-weight: 500; margin: 0; font-size: 0.9rem;">🟢 Stock: {{ montura.stock }} unds.</p>
+    } @else {
+      <p style="color: #d32f2f; font-weight: bold; margin: 0; font-size: 0.9rem;">🔴 AGOTADO</p>
+    }
   </mat-card-content>
   
   <mat-card-actions>
-    <button mat-flat-button color="primary" (click)="onVerDetalle()" style="width: 100%; border-radius: 8px;">
+    <button mat-flat-button color="primary" [disabled]="montura.stock === 0" (click)="onVerDetalle()" style="width: 100%; border-radius: 8px;">
       Ver Detalles
     </button>
   </mat-card-actions>
-</mat-card>

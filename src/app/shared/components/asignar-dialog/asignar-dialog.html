@@ -1,0 +1,32 @@
+<h2 mat-dialog-title style="color: #1976d2;">Asignar Montura</h2>
+
+<mat-dialog-content style="min-width: 300px; padding-top: 1rem;">
+  <p style="margin-bottom: 1.5rem;">
+    Vas a asignar la montura <strong>{{ datosMontura.marca }} - {{ datosMontura.modelo }}</strong>.
+  </p>
+
+  <mat-form-field appearance="outline" style="width: 100%;">
+    <mat-label>Seleccionar Paciente</mat-label>
+    <mat-select [(ngModel)]="pacienteSeleccionado">
+      
+      @if (pacientes$ | async; as pacientes) {
+        @for (paciente of pacientes; track paciente.id) {
+          <mat-option [value]="paciente">
+            {{ paciente.nombre }} (DNI: {{ paciente.dni }})
+          </mat-option>
+        }
+        @empty {
+          <mat-option disabled>No hay pacientes registrados</mat-option>
+        }
+      }
+      
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="cancelar()">Cancelar</button>
+  <button mat-flat-button color="primary" [disabled]="!pacienteSeleccionado" (click)="confirmarAsignacion()">
+    Confirmar Venta
+  </button>
+</mat-dialog-actions>

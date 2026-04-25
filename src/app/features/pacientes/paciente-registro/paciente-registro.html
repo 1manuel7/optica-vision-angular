@@ -1,0 +1,62 @@
+<div style="max-width: 800px; margin: 0 auto;">
+  <mat-card style="padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    
+    <mat-card-header style="margin-bottom: 1.5rem;">
+      <mat-card-title style="font-size: 1.8rem; color: #1976d2;">Registro Clínico de Paciente</mat-card-title>
+      <mat-card-subtitle>Ingrese los datos personales y la receta oftalmológica</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="pacienteForm" (ngSubmit)="guardarPaciente()" style="display: flex; flex-direction: column; gap: 1.5rem;">
+        
+        <h3 style="margin: 0; color: #333;">Datos Personales</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre Completo</mat-label>
+            <input matInput formControlName="nombre" placeholder="Ej. Juan Pérez">
+            @if (pacienteForm.get('nombre')?.hasError('required')) {
+              <mat-error>El nombre es obligatorio</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>DNI</mat-label>
+            <input matInput formControlName="dni" placeholder="8 dígitos numéricos">
+            @if (pacienteForm.get('dni')?.hasError('pattern')) {
+              <mat-error>Debe tener exactamente 8 números</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput formControlName="telefono">
+          </mat-form-field>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <h3 style="margin: 0; color: #333;">Medida Visual (RX)</h3>
+        
+        <p style="margin: 0; font-weight: bold; color: #d32f2f;">Ojo Derecho (OD)</p>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+          <mat-form-field appearance="outline"><mat-label>Esfera (ESF)</mat-label><input matInput formControlName="esferaOD"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Cilindro (CIL)</mat-label><input matInput formControlName="cilindroOD"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Eje</mat-label><input matInput formControlName="ejeOD"></mat-form-field>
+        </div>
+
+        <p style="margin: 0; font-weight: bold; color: #1976d2;">Ojo Izquierdo (OI)</p>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+          <mat-form-field appearance="outline"><mat-label>Esfera (ESF)</mat-label><input matInput formControlName="esferaOI"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Cilindro (CIL)</mat-label><input matInput formControlName="cilindroOI"></mat-form-field>
+          <mat-form-field appearance="outline"><mat-label>Eje</mat-label><input matInput formControlName="ejeOI"></mat-form-field>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" style="height: 50px; font-size: 1.1rem; border-radius: 8px; margin-top: 1rem;">
+          Registrar Paciente y Receta
+        </button>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

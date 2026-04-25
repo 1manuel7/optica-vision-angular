@@ -9,10 +9,10 @@ export class MonturaService {
 
   // Nuestra "Base de datos" simulada
   private monturas: Montura[] = [
-    { id: 1, marca: 'Ray-Ban', modelo: 'Aviator Clásico', material: 'Metal', precio: 150, imagen: '👓' },
-    { id: 2, marca: 'Oakley', modelo: 'Holbrook', material: 'Acetato', precio: 130, imagen: '🕶️' },
-    { id: 3, marca: 'Prada', modelo: 'Cat Eye', material: 'Acetato', precio: 250, imagen: '🕶️' },
-    { id: 4, marca: 'Armani', modelo: 'Minimalist', material: 'Titanio', precio: 180, imagen: '👓' }
+    { id: 1, marca: 'Ray-Ban', modelo: 'Aviator Clásico', material: 'Metal', precio: 150, imagen: '👓' , stock: 5},
+    { id: 2, marca: 'Oakley', modelo: 'Holbrook', material: 'Acetato', precio: 130, imagen: '🕶️', stock: 3 },
+    { id: 3, marca: 'Prada', modelo: 'Cat Eye', material: 'Acetato', precio: 250, imagen: '🕶️', stock: 10 },
+    { id: 4, marca: 'Armani', modelo: 'Minimalist', material: 'Titanio', precio: 180, imagen: '👓' , stock:0}
   ];
 
   constructor() { }
@@ -34,4 +34,11 @@ export class MonturaService {
       m.material.toLowerCase().includes(material.toLowerCase())
     );
   }
+  descontarStock(id: number): void {
+    const montura = this.getMonturaPorId(id);
+    if (montura && montura.stock > 0) {
+      montura.stock -= 1; // Restamos 1 al stock disponible
+    }
+}
+
 }

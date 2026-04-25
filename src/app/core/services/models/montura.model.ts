@@ -5,4 +5,5 @@ export interface Montura {
   material: string; // ej: Metal, Acetato, Titanio
   precio: number;
   imagen: string;
+  stock: number;
 }
