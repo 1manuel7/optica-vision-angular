@@ -25,8 +25,7 @@ export class AuthService {
     // Por ahora, simularemos que el usuario correcto es 'admin' y clave '1234'
     if (usuario === 'admin' && contrasena === '1234') {
       this.usuarioAutenticado.next(true);
-      this.router.navigate(['/catalogo']); // Lo enviamos al sistema
-      return true;
+      this.router.navigate(['/dashboard']);      return true;
     }
     return false; // Credenciales incorrectas
   }

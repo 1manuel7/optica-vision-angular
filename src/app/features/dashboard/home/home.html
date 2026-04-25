@@ -1,0 +1,63 @@
+<div style="max-width: 1100px; margin: 0 auto;">
+  <h2 style="color: #333; font-size: 2rem; margin-bottom: 1.5rem;">Resumen del Negocio</h2>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+    
+    <mat-card style="border-left: 5px solid #1976d2; border-radius: 8px;">
+      <mat-card-content style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem;">
+        <div>
+          <p style="color: #666; margin: 0; font-size: 1.1rem;">Órdenes Generadas</p>
+          <h3 style="margin: 0; font-size: 3rem; color: #1976d2;">{{ totalVentas }}</h3>
+        </div>
+        <div style="background: #e3f2fd; padding: 1rem; border-radius: 50%;">
+          <mat-icon style="color: #1976d2; font-size: 2rem; width: 2rem; height: 2rem;">shopping_cart</mat-icon>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card style="border-left: 5px solid #4caf50; border-radius: 8px;">
+      <mat-card-content style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem;">
+        <div>
+          <p style="color: #666; margin: 0; font-size: 1.1rem;">Pacientes Registrados</p>
+          <h3 style="margin: 0; font-size: 3rem; color: #4caf50;">{{ totalPacientes }}</h3>
+        </div>
+        <div style="background: #e8f5e9; padding: 1rem; border-radius: 50%;">
+          <mat-icon style="color: #4caf50; font-size: 2rem; width: 2rem; height: 2rem;">people</mat-icon>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card style="border-left: 5px solid #d32f2f; border-radius: 8px;">
+      <mat-card-content style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem;">
+        <div>
+          <p style="color: #666; margin: 0; font-size: 1.1rem;">Alertas de Stock</p>
+          <h3 style="margin: 0; font-size: 3rem; color: #d32f2f;">{{ monturasAgotadas.length }}</h3>
+        </div>
+        <div style="background: #ffebee; padding: 1rem; border-radius: 50%;">
+          <mat-icon style="color: #d32f2f; font-size: 2rem; width: 2rem; height: 2rem;">warning</mat-icon>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+
+  @if (monturasAgotadas.length > 0) {
+    <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      <mat-card-header style="background-color: #fff3f3; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #ffcdd2;">
+        <mat-card-title style="color: #d32f2f; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+          <mat-icon>inventory_2</mat-icon> Productos Agotados
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content style="padding: 1.5rem;">
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          @for (item of monturasAgotadas; track item.id) {
+            <li style="padding: 0.8rem 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+              <strong>{{ item.marca }} - {{ item.modelo }}</strong>
+              <span style="color: #d32f2f; font-weight: bold;">0 Unidades</span>
+            </li>
+          }
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
