@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { PacienteService } from '../../../core/services/paciente';
+import { Router } from '@angular/router'; // Agrega esta importación arriba
 
 @Component({
   selector: 'app-paciente-list',
@@ -13,10 +14,15 @@ import { PacienteService } from '../../../core/services/paciente';
 })
 export class PacienteListComponent {
   private pacienteService = inject(PacienteService);
+  private router = inject(Router); // Inyecta el enrutador
   
   // Traemos la lista reactiva de pacientes directamente del servicio
   pacientes$ = this.pacienteService.pacientes$;
   
-  // Le decimos a la tabla exactamente qué columnas queremos mostrar
-  columnasMostrar: string[] = ['dni', 'nombre', 'telefono', 'receta'];
+  // Añade 'acciones' al final
+  columnasMostrar: string[] = ['dni', 'nombre', 'telefono', 'receta', 'acciones'];
+
+  verPerfil(id: string) {
+    this.router.navigate(['/paciente', id]);
+  }
 }

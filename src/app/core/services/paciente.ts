@@ -48,4 +48,17 @@ export class PacienteService {
   obtenerPacientePorDni(dni: string): Paciente | undefined {
     return this.pacientesSubject.value.find(p => p.dni === dni);
   }
+  // Busca un paciente específico por su ID único
+  getPacientePorId(id: string): Paciente | undefined {
+    return this.pacientesSubject.value.find(p => p.id === id);
+  }
+
+  // Recibe un paciente con datos nuevos y lo reemplaza en la base de datos
+  actualizarPaciente(pacienteActualizado: Paciente) {
+    const listaActualizada = this.pacientesSubject.value.map(p => 
+      p.id === pacienteActualizado.id ? pacienteActualizado : p
+    );
+    this.pacientesSubject.next(listaActualizada);
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(listaActualizada));
+  }
 }

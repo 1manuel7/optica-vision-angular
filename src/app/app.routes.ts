@@ -8,6 +8,7 @@ import { PacienteRegistroComponent } from './features/pacientes/paciente-registr
 import { PacienteListComponent } from './features/pacientes/paciente-list/paciente-list';
 import { OrdenListComponent } from './features/ordenes/orden-list/orden-list';
 import { HomeComponent } from './features/dashboard/home/home';
+import { PacienteDetalleComponent } from './features/pacientes/paciente-detalle/paciente-detalle';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -19,6 +20,11 @@ export const routes: Routes = [
   { 
     path: 'pedidos', 
     component: OrdenListComponent,
+    canActivate: [authGuard] 
+  },
+  { 
+    path: 'paciente/:id', 
+    component: PacienteDetalleComponent,
     canActivate: [authGuard] 
   },
   
