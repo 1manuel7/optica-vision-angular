@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit,ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -30,32 +30,34 @@ export class PacienteDetalleComponent implements OnInit {
   private fb = inject(FormBuilder);
   private pacienteService = inject(PacienteService);
   private ordenService = inject(OrdenService);
+  private cdr = inject(ChangeDetectorRef);
 
   pacienteId!: string;
   pacienteActual!: Paciente;
   pacienteForm!: FormGroup;
   historialOrdenes: OrdenTrabajo[] = [];
 
-  ngOnInit() {
-    // 1. Obtenemos el ID del paciente desde la URL
+  // 1. Agregamos 'async' porque ahora nos comunicamos con la nube
+async ngOnInit() {
     this.pacienteId = this.route.snapshot.paramMap.get('id') || '';
 
-    // 2. Buscamos al paciente en la base de datos
-    const pacienteEncontrado = this.pacienteService.getPacientePorId(this.pacienteId);
+    const pacienteEncontrado = await this.pacienteService.getPacientePorId(this.pacienteId);
     
     if (pacienteEncontrado) {
       this.pacienteActual = pacienteEncontrado;
       this.inicializarFormulario();
       this.cargarHistorial();
+      
+      // 2. ¡EL PELLIZCO! Obligamos a Angular a pintar los datos inmediatamente
+      this.cdr.detectChanges();
+
     } else {
-      // Si escriben un ID falso en la URL, lo regresamos al directorio
       alert('Paciente no encontrado');
       this.router.navigate(['/directorio']);
     }
   }
 
   inicializarFormulario() {
-    // Creamos el formulario PRE-LLENADO con los datos actuales
     this.pacienteForm = this.fb.group({
       nombre: [this.pacienteActual.nombre, [Validators.required, Validators.minLength(3)]],
       dni: [this.pacienteActual.dni, [Validators.required, Validators.pattern('^[0-9]{8}$')]],
@@ -70,23 +72,25 @@ export class PacienteDetalleComponent implements OnInit {
   }
 
   cargarHistorial() {
-    // Filtramos todas las órdenes de la óptica para mostrar solo las de este paciente
+    // Nota: Aún usamos el servicio de órdenes local, luego lo migraremos también
     this.ordenService.ordenes$.subscribe(todasLasOrdenes => {
-      this.historialOrdenes = todasLasOrdenes.filter(orden => orden.paciente.id === this.pacienteId);
+      this.historialOrdenes = todasLasOrdenes.filter(orden => orden.paciente_id === this.pacienteId);
     });
   }
 
-  guardarCambios() {
+  // 3. Agregamos 'async' para el proceso de guardado
+  async guardarCambios() {
     if (this.pacienteForm.valid) {
-      // Unimos el ID original con los datos nuevos del formulario
-      const pacienteActualizado: Paciente = {
-        id: this.pacienteId,
-        ...this.pacienteForm.value
-      };
-      
-      this.pacienteService.actualizarPaciente(pacienteActualizado);
-      alert('¡Datos del paciente actualizados correctamente!');
-      this.router.navigate(['/directorio']);
+      try {
+        // 4. Pasamos los 2 argumentos que exige el nuevo servicio (ID y Formulario)
+        await this.pacienteService.actualizarPaciente(this.pacienteId, this.pacienteForm.value);
+        
+        alert('¡Datos actualizados en la nube correctamente!');
+        this.router.navigate(['/directorio']);
+      } catch (error) {
+        alert('Hubo un error al actualizar los datos.');
+        console.error(error);
+      }
     }
   }
 

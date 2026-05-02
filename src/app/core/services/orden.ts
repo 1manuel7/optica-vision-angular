@@ -1,56 +1,79 @@
 import { Injectable } from '@angular/core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
 import { BehaviorSubject } from 'rxjs';
-// Importamos las interfaces que ya creamos antes
 import { Paciente } from './paciente';
 import { Montura } from './models/montura.model';
 
-// Definimos los estados que pidió Luis en el documento
-export type EstadoOrden = 'Pendiente' | 'En Proceso' | 'Entregado';
+export type EstadoOrden = 'PENDIENTE' | 'EN PROCESO' | 'ENTREGADO';
 
 export interface OrdenTrabajo {
-  id: string;
-  paciente: Paciente;
-  montura: Montura;
-  fechaEmision: string;
-  estado: EstadoOrden;
+  id?: string;
+  paciente_id?: string;
+  montura_id?: string;
+  estado: string;
+  fecha?: string;
+  
+  // Estas propiedades virtuales las llenará Supabase mágicamente con el JOIN
+  paciente?: Paciente;
+  montura?: Montura;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrdenService {
-  private readonly STORAGE_KEY = 'optica_ordenes';
+  private supabase: SupabaseClient;
   
-  private ordenesSubject = new BehaviorSubject<OrdenTrabajo[]>(this.cargarOrdenes());
+  private ordenesSubject = new BehaviorSubject<OrdenTrabajo[]>([]);
   ordenes$ = this.ordenesSubject.asObservable();
 
-  // Lee las órdenes guardadas en el navegador
-  private cargarOrdenes(): OrdenTrabajo[] {
-    const datos = localStorage.getItem(this.STORAGE_KEY);
-    return datos ? JSON.parse(datos) : [];
+  constructor() {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.cargarOrdenes();
   }
 
-  // Genera una nueva venta/orden de trabajo
-  crearOrden(paciente: Paciente, montura: Montura) {
-    const nuevaOrden: OrdenTrabajo = {
-      id: crypto.randomUUID(),
-      paciente: paciente,
-      montura: montura,
-      fechaEmision: new Date().toISOString(), // Fecha y hora exacta de la venta
-      estado: 'Pendiente' // Toda orden nueva entra como pendiente
+  // LEER: Traemos la orden con los datos del paciente y la montura incluidos
+  async cargarOrdenes() {
+    const { data, error } = await this.supabase
+      .from('ordenes')
+      /* ¡LA MAGIA DE SQL! Le pedimos que nos traiga la orden, 
+         y que expanda los objetos paciente y montura */
+      .select('*, paciente:pacientes(*), montura:monturas(*)')
+      .order('fecha', { ascending: false });
+
+    if (!error) {
+      this.ordenesSubject.next(data || []);
+    }
+  }
+
+  // ESCRIBIR: Genera la orden al vender
+  async crearOrden(paciente: Paciente, montura: Montura) {
+    // Solo necesitamos enviar los IDs a la base de datos
+    const nuevaOrden = {
+      paciente_id: paciente.id,
+      montura_id: montura.id,
+      estado: 'PENDIENTE'
     };
 
-    const listaActualizada = [nuevaOrden, ...this.ordenesSubject.value];
-    this.ordenesSubject.next(listaActualizada);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(listaActualizada));
+    const { error } = await this.supabase
+      .from('ordenes')
+      .insert([nuevaOrden]);
+
+    if (!error) {
+      await this.cargarOrdenes(); // Refrescamos la lista
+    } else {
+      console.error('Error al crear orden:', error);
+    }
   }
 
-  // Permite actualizar el estado (ej. pasarlo a "Entregado")
-  actualizarEstado(idOrden: string, nuevoEstado: EstadoOrden) {
-    const ordenes = this.ordenesSubject.value.map(orden => 
-      orden.id === idOrden ? { ...orden, estado: nuevoEstado } : orden
-    );
-    this.ordenesSubject.next(ordenes);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(ordenes));
+  // ACTUALIZAR: Cambia el estado (PENDIENTE -> EN PROCESO -> ENTREGADO)
+  async actualizarEstado(id: string, nuevoEstado: string) {
+    const { error } = await this.supabase
+      .from('ordenes')
+      .update({ estado: nuevoEstado })
+      .eq('id', id);
+
+    if (!error) await this.cargarOrdenes();
   }
 }

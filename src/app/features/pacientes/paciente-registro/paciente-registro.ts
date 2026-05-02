@@ -35,13 +35,18 @@ export class PacienteRegistroComponent {
     esferaOI: ['', Validators.required], cilindroOI: [''], ejeOI: ['']
   });
 
-  guardarPaciente() {
+ // Agregamos 'async' a la función
+  async guardarPaciente() {
     if (this.pacienteForm.valid) {
-      // ENVIAMOS LOS DATOS AL SERVICIO PARA QUE LOS GUARDE
-      this.pacienteService.agregarPaciente(this.pacienteForm.value);
-      
-      alert('¡Paciente y receta guardados exitosamente en la base de datos local!');
-      this.pacienteForm.reset();
+      try {
+        // Esperamos a que la base de datos responda
+        await this.pacienteService.agregarPaciente(this.pacienteForm.value);
+        
+        alert('¡Paciente guardado en la nube exitosamente!');
+        this.pacienteForm.reset();
+      } catch (error) {
+        alert('Hubo un error al conectar con la base de datos.');
+      }
     } else {
       this.pacienteForm.markAllAsTouched();
     }

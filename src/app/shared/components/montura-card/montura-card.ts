@@ -12,7 +12,7 @@ import { Montura } from '../../../core/services/models/montura.model';
 })
 export class MonturaCardComponent {
   @Input({ required: true }) montura!: Montura;
-  @Output() seleccionar = new EventEmitter<number>();
+  @Output() seleccionar = new EventEmitter<string>();
 
   onVerDetalle() {
     this.seleccionar.emit(this.montura.id);

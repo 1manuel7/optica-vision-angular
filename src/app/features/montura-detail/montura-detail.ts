@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MonturaService } from '../../core/services/montura';
 import { StateService } from '../../core/services/state';
@@ -23,15 +23,28 @@ export class MonturaDetailComponent implements OnInit {
   private stateService = inject(StateService);
   private dialog = inject(MatDialog);
   private ordenService = inject(OrdenService); // Inyección de órdenes
+  private cdr = inject(ChangeDetectorRef); // <-- 1. Inyectamos la herramienta
 
-  ngOnInit() {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    const id = Number(idParam);
+async ngOnInit() {
+    const id = this.route.snapshot.paramMap.get('id');
 
-    this.montura = this.monturaService.getMonturaPorId(id);
+    if (id) {
+      try {
+        const encontrada = await this.monturaService.getMonturaPorId(id);
 
-    if (this.montura) {
-      this.stateService.setUltimaMontura(this.montura);
+        if (encontrada) {
+          this.montura = encontrada;
+          this.stateService.setUltimaMontura(this.montura);
+          
+          // 2. ¡EL PELLIZCO! Le decimos a Angular: "¡Oye, ya llegaron los datos, actualiza la pantalla!"
+          this.cdr.detectChanges(); 
+          
+        } else {
+          console.warn('Supabase no encontró nada');
+        }
+      } catch (error) {
+        console.error('Error al buscar:', error);
+      }
     }
   }
 

@@ -56,10 +56,10 @@
             @for (orden of historialOrdenes; track orden.id) {
               <div style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px; background: #fafafa;">
                 <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; color: #666;">
-                  📅 {{ orden.fechaEmision | date:'dd/MM/yyyy HH:mm' }}
+                  📅 {{ orden.fecha | date:'dd/MM/yyyy HH:mm' }}
                 </p>
                 <p style="margin: 0 0 0.5rem 0; font-weight: bold; color: #333;">
-                  {{ orden.montura.marca }} - {{ orden.montura.modelo }}
+                  {{ orden.montura?.marca }} - {{ orden.montura?.modelo }}
                 </p>
                 <span style="background-color: #e0e0e0; padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;">
                   Estado: {{ orden.estado }}

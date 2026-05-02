@@ -1,5 +1,5 @@
 export interface Montura {
-  id: number;
+  id: string;
   marca: string;
   modelo: string;
   material: string; // ej: Metal, Acetato, Titanio

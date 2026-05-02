@@ -1,64 +1,85 @@
 import { Injectable } from '@angular/core';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
 import { BehaviorSubject } from 'rxjs';
 
-// Definimos la estructura exacta de nuestro paciente
 export interface Paciente {
-  id: string; // Le daremos un ID único a cada uno
+  id?: string; // El ID lo generará la base de datos automáticamente
   nombre: string;
   dni: string;
   telefono: string;
-  esferaOD: string; cilindroOD: string; ejeOD: string;
-  esferaOI: string; cilindroOI: string; ejeOI: string;
+  esferaOD: string;
+  cilindroOD: string;
+  ejeOD: string;
+  esferaOI: string;
+  cilindroOI: string;
+  ejeOI: string;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class PacienteService {
-  // Clave secreta para guardar en el navegador
-  private readonly STORAGE_KEY = 'optica_pacientes';
+  private supabase: SupabaseClient;
   
-  // Lista reactiva de pacientes
-  private pacientesSubject = new BehaviorSubject<Paciente[]>(this.cargarPacientes());
+  // Seguimos usando el BehaviorSubject para que nuestras tablas se actualicen solas
+  private pacientesSubject = new BehaviorSubject<Paciente[]>([]);
   pacientes$ = this.pacientesSubject.asObservable();
 
-  constructor() {}
-
-  // Lee los datos guardados en el disco duro del navegador
-  private cargarPacientes(): Paciente[] {
-    const datos = localStorage.getItem(this.STORAGE_KEY);
-    return datos ? JSON.parse(datos) : [];
+  constructor() {
+    // Inicializamos la conexión con la nube
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.cargarPacientes();
   }
 
-  // Agrega un nuevo paciente a la lista y lo guarda
-  agregarPaciente(pacienteSinId: Omit<Paciente, 'id'>) {
-    const nuevoPaciente: Paciente = {
-      ...pacienteSinId,
-      id: crypto.randomUUID() // Genera un ID único y profesional
-    };
+  // LEER: Trae todos los pacientes de la nube ordenados por fecha
+  async cargarPacientes() {
+    const { data, error } = await this.supabase
+      .from('pacientes')
+      .select('*')
+      .order('created_at', { ascending: false });
 
-    const listaActualizada = [...this.pacientesSubject.value, nuevoPaciente];
-    this.pacientesSubject.next(listaActualizada);
-    
-    // Guardamos permanentemente en el navegador
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(listaActualizada));
+    if (error) {
+      console.error('Error al cargar pacientes:', error);
+    } else {
+      this.pacientesSubject.next(data || []);
+    }
   }
 
-  // Permite buscar un paciente por su DNI en el futuro
-  obtenerPacientePorDni(dni: string): Paciente | undefined {
-    return this.pacientesSubject.value.find(p => p.dni === dni);
-  }
-  // Busca un paciente específico por su ID único
-  getPacientePorId(id: string): Paciente | undefined {
-    return this.pacientesSubject.value.find(p => p.id === id);
+  // ESCRIBIR: Guarda un nuevo paciente en la base de datos real
+  async agregarPaciente(paciente: Paciente) {
+    const { data, error } = await this.supabase
+      .from('pacientes')
+      .insert([paciente])
+      .select();
+
+    if (error) {
+      console.error('Error al guardar:', error);
+      throw error;
+    } else {
+      // Refrescamos la lista automáticamente
+      await this.cargarPacientes();
+      return data;
+    }
   }
 
-  // Recibe un paciente con datos nuevos y lo reemplaza en la base de datos
-  actualizarPaciente(pacienteActualizado: Paciente) {
-    const listaActualizada = this.pacientesSubject.value.map(p => 
-      p.id === pacienteActualizado.id ? pacienteActualizado : p
-    );
-    this.pacientesSubject.next(listaActualizada);
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(listaActualizada));
+  // ACTUALIZAR: Modifica los datos de un paciente existente
+  async actualizarPaciente(id: string, cambios: Partial<Paciente>) {
+    const { error } = await this.supabase
+      .from('pacientes')
+      .update(cambios)
+      .eq('id', id);
+
+    if (!error) await this.cargarPacientes();
+  }
+
+  // BUSCAR: Obtiene un paciente por su ID
+  async getPacientePorId(id: string) {
+    const { data } = await this.supabase
+      .from('pacientes')
+      .select('*')
+      .eq('id', id)
+      .single();
+    return data;
   }
 }

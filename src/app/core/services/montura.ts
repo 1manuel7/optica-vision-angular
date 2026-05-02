@@ -1,44 +1,71 @@
 import { Injectable } from '@angular/core';
-import { Montura } from '../services/models/montura.model';
-
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../../../environments/environment';
+import { BehaviorSubject } from 'rxjs';
+import { Montura } from './models/montura.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MonturaService {
+  private supabase: SupabaseClient;
+  
+  private monturasSubject = new BehaviorSubject<Montura[]>([]);
+  monturas$ = this.monturasSubject.asObservable();
 
-  // Nuestra "Base de datos" simulada
-  private monturas: Montura[] = [
-    { id: 1, marca: 'Ray-Ban', modelo: 'Aviator Clásico', material: 'Metal', precio: 150, imagen: '👓' , stock: 5},
-    { id: 2, marca: 'Oakley', modelo: 'Holbrook', material: 'Acetato', precio: 130, imagen: '🕶️', stock: 3 },
-    { id: 3, marca: 'Prada', modelo: 'Cat Eye', material: 'Acetato', precio: 250, imagen: '🕶️', stock: 10 },
-    { id: 4, marca: 'Armani', modelo: 'Minimalist', material: 'Titanio', precio: 180, imagen: '👓' , stock:0}
-  ];
-
-  constructor() { }
-
-  // 1. Obtener todas las monturas
-  getTodasLasMonturas(): Montura[] {
-    return this.monturas;
+  constructor() {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
+    this.cargarMonturas();
   }
 
-  // 2. Obtener una montura por su ID (Para la vista de detalle)
-  getMonturaPorId(id: number): Montura | undefined {
-    return this.monturas.find(m => m.id === id);
-  }
+  // LEER: Trae el inventario real desde la nube
+  async cargarMonturas() {
+    const { data, error } = await this.supabase
+      .from('monturas')
+      .select('*')
+      .order('marca', { ascending: true });
 
-  // 3. Lógica de negocio: Filtrar por material (Para la búsqueda)
-  filtrarPorMaterial(material: string): Montura[] {
-    if (!material) return this.monturas;
-    return this.monturas.filter(m => 
-      m.material.toLowerCase().includes(material.toLowerCase())
-    );
-  }
-  descontarStock(id: number): void {
-    const montura = this.getMonturaPorId(id);
-    if (montura && montura.stock > 0) {
-      montura.stock -= 1; // Restamos 1 al stock disponible
+    if (!error) {
+      this.monturasSubject.next(data || []);
     }
-}
+  }
 
-}
+  // BUSCAR: Obtiene una montura por ID
+  async getMonturaPorId(id: string): Promise<Montura | null> {
+    const { data } = await this.supabase
+      .from('monturas')
+      .select('*')
+      .eq('id', id)
+      .single();
+    return data;
+  }
+
+  // LÓGICA DE NEGOCIO: Descontar stock tras una venta
+  async descontarStock(id: string) {
+    // 1. Buscamos el stock actual
+    const montura = await this.getMonturaPorId(id);
+    
+    if (montura && montura.stock > 0) {
+      // 2. Restamos uno y actualizamos en la nube
+      const nuevoStock = montura.stock - 1;
+      const { error } = await this.supabase
+        .from('monturas')
+        .update({ stock: nuevoStock })
+        .eq('id', id);
+
+      if (!error) await this.cargarMonturas(); // Refrescamos la vista
+    }
+  }
+  // Devuelve la lista actual para el Dashboard
+  getTodasLasMonturas(): Montura[] {
+    return this.monturasSubject.value;
+  }
+
+  // Filtra la lista actual para el Catálogo
+  filtrarPorMaterial(material: string): Montura[] {
+    if (!material || material === 'Todos') {
+      return this.monturasSubject.value;
+    }
+    return this.monturasSubject.value.filter(m => m.material === material);
+  }
+} // <- Esta es la última llave de tu clase

@@ -1,9 +1,8 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core'; // <-- 1. Agregamos ChangeDetectorRef
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon'; // Para iconos bonitos
+import { MatIconModule } from '@angular/material/icon'; 
 
-// Importamos todos nuestros servicios
 import { OrdenService } from '../../../core/services/orden';
 import { PacienteService } from '../../../core/services/paciente';
 import { MonturaService } from '../../../core/services/montura';
@@ -19,25 +18,28 @@ export class HomeComponent implements OnInit {
   private ordenService = inject(OrdenService);
   private pacienteService = inject(PacienteService);
   private monturaService = inject(MonturaService);
+  
+  // 2. Inyectamos la herramienta
+  private cdr = inject(ChangeDetectorRef);
 
-  // Nuestras métricas para la gerencia
   totalVentas = 0;
   totalPacientes = 0;
   monturasAgotadas: Montura[] = [];
 
   ngOnInit() {
-    // Escuchamos cuántas órdenes hay en total
     this.ordenService.ordenes$.subscribe(ordenes => {
       this.totalVentas = ordenes.length;
+      this.cdr.detectChanges(); // 3. ¡Pellizco para las órdenes!
     });
 
-    // Escuchamos cuántos pacientes hay registrados
     this.pacienteService.pacientes$.subscribe(pacientes => {
       this.totalPacientes = pacientes.length;
+      this.cdr.detectChanges(); // 3. ¡Pellizco para los pacientes!
     });
 
-    // Filtramos el inventario para encontrar lo que está en cero
-    const todoElInventario = this.monturaService.getTodasLasMonturas();
-    this.monturasAgotadas = todoElInventario.filter(m => m.stock === 0);
+    this.monturaService.monturas$.subscribe(monturas => {
+      this.monturasAgotadas = monturas.filter(m => m.stock === 0);
+      this.cdr.detectChanges(); // 3. ¡Pellizco para las monturas!
+    });
   }
 }

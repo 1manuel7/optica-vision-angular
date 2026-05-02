@@ -56,7 +56,7 @@ export class MonturaListComponent implements OnInit {
     });
   }
 
-  irAlDetalle(id: number) {
+  irAlDetalle(id: string) {
     // Método que se ejecuta cuando el @Output() de la tarjeta emite el evento
     this.router.navigate(['/catalogo', id]);
   }

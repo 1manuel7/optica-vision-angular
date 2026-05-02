@@ -34,7 +34,7 @@ export class OrdenListComponent {
   columnas: string[] = ['fecha', 'paciente', 'montura', 'estado', 'acciones'];
 
   // Los estados posibles para el menú desplegable
-  estados: EstadoOrden[] = ['Pendiente', 'En Proceso', 'Entregado'];
+  estados: EstadoOrden[] = ['PENDIENTE', 'EN PROCESO', 'ENTREGADO'];
 
   cambiarEstado(id: string, nuevoEstado: any) {
     this.ordenService.actualizarEstado(id, nuevoEstado);
