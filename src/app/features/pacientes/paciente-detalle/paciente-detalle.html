@@ -3,6 +3,10 @@
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
     <h2 style="color: #333; font-size: 2rem; margin: 0;">Perfil Clínico del Paciente</h2>
     <button mat-button (click)="volver()">⬅ Volver al Directorio</button>
+    <button mat-raised-button style="background-color: #1976d2; color: white; margin-left: 15px;" (click)="imprimirReceta()">
+  <mat-icon>print</mat-icon>
+  Imprimir Receta PDF
+</button>
   </div>
 
   <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">

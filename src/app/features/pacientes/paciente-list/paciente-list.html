@@ -7,53 +7,63 @@
     </mat-card-header>
     
     <mat-card-content>
-      @if (pacientes$ | async; as pacientes) {
+      
+      <div style="margin-bottom: 20px; max-width: 100%; display: flex; align-items: center; background: #f5f5f5; border-radius: 8px; padding: 0 15px; border: 1px solid #e0e0e0;">
+        <mat-icon style="color: #757575; margin-right: 10px;">search</mat-icon>
+        <input 
+          type="text" 
+          placeholder="Buscar paciente por Nombre o DNI..." 
+          (input)="buscarPaciente($event)"
+          style="width: 100%; padding: 15px 0; border: none; background: transparent; font-size: 1rem; outline: none;"
+        >
+      </div>
+
+      <table mat-table [dataSource]="pacientesFiltrados" style="width: 100%; border: 1px solid #e0e0e0; border-radius: 8px;">
         
-        <table mat-table [dataSource]="pacientes" style="width: 100%; border: 1px solid #e0e0e0; border-radius: 8px;">
-          
-          <ng-container matColumnDef="dni">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> DNI </th>
-            <td mat-cell *matCellDef="let paciente"> {{paciente.dni}} </td>
-          </ng-container>
+        <ng-container matColumnDef="dni">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> DNI </th>
+          <td mat-cell *matCellDef="let paciente"> {{paciente.dni}} </td>
+        </ng-container>
 
-          <ng-container matColumnDef="nombre">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Nombre Completo </th>
-            <td mat-cell *matCellDef="let paciente"> <strong>{{paciente.nombre}}</strong> </td>
-          </ng-container>
+        <ng-container matColumnDef="nombre">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Nombre Completo </th>
+          <td mat-cell *matCellDef="let paciente"> <strong>{{paciente.nombre}}</strong> </td>
+        </ng-container>
 
-          <ng-container matColumnDef="telefono">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Teléfono </th>
-            <td mat-cell *matCellDef="let paciente"> {{paciente.telefono}} </td>
-          </ng-container>
+        <ng-container matColumnDef="telefono">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Teléfono </th>
+          <td mat-cell *matCellDef="let paciente"> {{paciente.telefono}} </td>
+        </ng-container>
 
-          <ng-container matColumnDef="receta">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Medida (ESF) </th>
-            <td mat-cell *matCellDef="let paciente"> 
-              <span style="background: #e3f2fd; color: #1565c0; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem;">
-                OD: {{paciente.esferaOD}} | OI: {{paciente.esferaOI}}
-              </span>
-            </td>
-          </ng-container>
+        <ng-container matColumnDef="receta">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Medida (ESF) </th>
+          <td mat-cell *matCellDef="let paciente"> 
+            <span style="background: #e3f2fd; color: #1565c0; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem;">
+              OD: {{paciente.esferaOD}} | OI: {{paciente.esferaOI}}
+            </span>
+          </td>
+        </ng-container>
 
-          <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Perfil </th>
-            <td mat-cell *matCellDef="let paciente"> 
-              <button mat-button color="primary" (click)="verPerfil(paciente.id)" style="font-weight: bold;">
-                Ver Historial ➔
-              </button>
-            </td>
-          </ng-container>
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Perfil </th>
+          <td mat-cell *matCellDef="let paciente"> 
+            <button mat-button color="primary" (click)="verPerfil(paciente.id)" style="font-weight: bold;">
+              Ver Historial ➔
+            </button>
+          </td>
+        </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="columnasMostrar"></tr>
-          <tr mat-row *matRowDef="let row; columns: columnasMostrar;" style="transition: background 0.2s;"></tr>
-        </table>
+        <tr mat-header-row *matHeaderRowDef="columnasMostrar"></tr>
+        <tr mat-row *matRowDef="let row; columns: columnasMostrar;" style="transition: background 0.2s;"></tr>
+      </table>
 
-        @if (pacientes.length === 0) {
-          <div style="text-align: center; padding: 3rem; color: #757575;">
-            <p style="font-size: 1.2rem;">No hay pacientes registrados en el sistema.</p>
-          </div>
-        }
+      @if (pacientesFiltrados.length === 0) {
+        <div style="text-align: center; padding: 3rem; color: #757575;">
+          <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #bdbdbd; margin-bottom: 1rem;">person_search</mat-icon>
+          <p style="font-size: 1.2rem; margin: 0;">No se encontraron pacientes con esa búsqueda.</p>
+        </div>
       }
+
     </mat-card-content>
   </mat-card>
 </div>

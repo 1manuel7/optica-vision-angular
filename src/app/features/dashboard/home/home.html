@@ -40,6 +40,20 @@
     </mat-card>
 
   </div>
+  <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 2rem;">
+    <mat-card-header style="padding: 1.5rem 1.5rem 0;">
+      <mat-card-title style="color: #333; font-size: 1.4rem;">
+        <mat-icon style="vertical-align: middle; color: #757575;">bar_chart</mat-icon> Rendimiento Operativo
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content style="padding: 1.5rem;">
+      
+      <div style="height: 350px; width: 100%;">
+        <canvas #miGrafico></canvas>
+      </div>
+
+    </mat-card-content>
+  </mat-card>
 
   @if (monturasAgotadas.length > 0) {
     <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">

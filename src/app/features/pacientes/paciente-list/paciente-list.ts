@@ -1,26 +1,44 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core'; // <-- 1. Agregamos OnInit
 import { CommonModule } from '@angular/common';
-// Importamos la tabla corporativa de Angular Material
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
+import { Router } from '@angular/router';
 import { PacienteService } from '../../../core/services/paciente';
-import { Router } from '@angular/router'; // Agrega esta importación arriba
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-paciente-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatCardModule],
+  imports: [CommonModule, MatTableModule, MatCardModule,MatIconModule],
   templateUrl: './paciente-list.html'
 })
-export class PacienteListComponent {
+export class PacienteListComponent implements OnInit { // <-- 2. Implementamos OnInit
   private pacienteService = inject(PacienteService);
-  private router = inject(Router); // Inyecta el enrutador
+  private router = inject(Router); 
   
-  // Traemos la lista reactiva de pacientes directamente del servicio
-  pacientes$ = this.pacienteService.pacientes$;
+  // 3. Creamos nuestras listas para el buscador (en lugar de usar pacientes$)
+  pacientes: any[] = []; 
+  pacientesFiltrados: any[] = [];
   
-  // Añade 'acciones' al final
   columnasMostrar: string[] = ['dni', 'nombre', 'telefono', 'receta', 'acciones'];
+
+  ngOnInit() {
+    // 4. Nos suscribimos para escuchar los cambios en vivo desde Supabase
+    this.pacienteService.pacientes$.subscribe(data => {
+      this.pacientes = data;
+      this.pacientesFiltrados = data; // Al iniciar, mostramos todos
+    });
+  }
+
+  // 5. La lógica de búsqueda en tiempo real
+  buscarPaciente(event: any) {
+    const texto = event.target.value.toLowerCase();
+    
+    this.pacientesFiltrados = this.pacientes.filter(paciente => 
+      paciente.nombre.toLowerCase().includes(texto) || 
+      paciente.dni.includes(texto)
+    );
+  }
 
   verPerfil(id: string) {
     this.router.navigate(['/paciente', id]);
