@@ -6,4 +6,5 @@ export interface Montura {
   precio: number;
   imagen: string;
   stock: number;
+  imagen_url?: string;
 }

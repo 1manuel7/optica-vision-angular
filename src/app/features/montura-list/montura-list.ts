@@ -4,7 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MonturaService } from '../../core/services/montura';
 import { Montura } from '../../core/services/models/montura.model';
 import { MonturaCardComponent } from '../../shared/components/montura-card/montura-card';
-// Nuevas importaciones de Material para el buscador
+
+// Importaciones de Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,8 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-montura-list',
   standalone: true,
-  // Importante: Importamos FormsModule para el input y la tarjeta hija
-imports: [
+  imports: [
     FormsModule, 
     MonturaCardComponent, 
     MatFormFieldModule, 
@@ -22,19 +22,18 @@ imports: [
     MatButtonModule, 
     MatIconModule
   ],
-    templateUrl: './montura-list.html'
+  templateUrl: './montura-list.html'
 })
 export class MonturaListComponent implements OnInit {
   monturas: Montura[] = [];
   filtroMaterial: string = '';
 
-  // Inyección de dependencias moderna en Angular
+  // Inyecciones
   private monturaService = inject(MonturaService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
 
   ngOnInit() {
-    // Escuchamos los Query Params de la URL (ej: /catalogo?material=Metal)
     this.route.queryParams.subscribe(params => {
       this.filtroMaterial = params['material'] || '';
       this.cargarMonturas();
@@ -42,13 +41,10 @@ export class MonturaListComponent implements OnInit {
   }
 
   cargarMonturas() {
-    // Obtenemos los datos ya filtrados desde nuestro servicio
     this.monturas = this.monturaService.filtrarPorMaterial(this.filtroMaterial);
   }
 
   buscar() {
-    // Al dar clic en buscar, actualizamos la URL con el Query Param. 
-    // Esto disparará automáticamente el 'subscribe' de arriba.
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { material: this.filtroMaterial || null },
@@ -57,7 +53,11 @@ export class MonturaListComponent implements OnInit {
   }
 
   irAlDetalle(id: string) {
-    // Método que se ejecuta cuando el @Output() de la tarjeta emite el evento
     this.router.navigate(['/catalogo', id]);
+  }
+
+  // --- ¡NUEVA FUNCIÓN DE NAVEGACIÓN PROGRAMÁTICA! ---
+  irANuevaMontura() {
+    this.router.navigate(['/nueva-montura']);
   }
 }

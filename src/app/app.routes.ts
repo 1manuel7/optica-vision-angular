@@ -9,6 +9,7 @@ import { PacienteListComponent } from './features/pacientes/paciente-list/pacien
 import { OrdenListComponent } from './features/ordenes/orden-list/orden-list';
 import { HomeComponent } from './features/dashboard/home/home';
 import { PacienteDetalleComponent } from './features/pacientes/paciente-detalle/paciente-detalle';
+import { MonturaRegistroComponent } from './features/catalogo/montura-registro/montura-registro';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -53,6 +54,8 @@ export const routes: Routes = [
     component: MonturaDetailComponent,
     canActivate: [authGuard] 
   },
+  { path: 'nueva-montura',
+   component: MonturaRegistroComponent, canActivate: [authGuard] },
   
   { path: '**', redirectTo: 'login' },
 

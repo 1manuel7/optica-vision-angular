@@ -1,5 +1,12 @@
 <div>
-  <h2 style="margin-bottom: 1.5rem; font-family: Roboto, sans-serif;">Catálogo de Monturas en Stock</h2>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+    <h2 style="margin: 0; font-family: Roboto, sans-serif;">Catálogo de Monturas en Stock</h2>
+    
+    <button mat-raised-button color="accent" (click)="irANuevaMontura()" style="height: 50px; border-radius: 8px; font-weight: bold;">
+      <mat-icon style="margin-right: 8px;">add_circle</mat-icon>
+      Agregar Montura
+    </button>
+  </div>
 
   <div style="margin-bottom: 2rem; display: flex; gap: 1rem; align-items: center;">
     
@@ -12,7 +19,6 @@
     <button mat-flat-button color="primary" (click)="buscar()" style="height: 50px; border-radius: 8px; margin-bottom: 22px;">
       Filtrar Catálogo
     </button>
-     
   </div>
 
   <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">

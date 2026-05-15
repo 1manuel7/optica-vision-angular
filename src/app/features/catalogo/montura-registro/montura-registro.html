@@ -1,0 +1,53 @@
+<div style="max-width: 600px; margin: 2rem auto;">
+  <mat-card style="padding: 2rem; border-radius: 12px;">
+    <mat-card-header style="margin-bottom: 1.5rem;">
+      <mat-card-title style="color: #1976d2; font-size: 1.6rem;">Registrar Nueva Montura</mat-card-title>
+    </mat-card-header>
+
+    <form [formGroup]="monturaForm" (ngSubmit)="guardar()" style="display: flex; flex-direction: column; gap: 1rem;">
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <mat-form-field appearance="outline">
+          <mat-label>Marca</mat-label>
+          <input matInput formControlName="marca" placeholder="Ej: Ray-Ban">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Modelo</mat-label>
+          <input matInput formControlName="modelo" placeholder="Ej: Aviator">
+        </mat-form-field>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <mat-form-field appearance="outline">
+          <mat-label>Color</mat-label>
+          <input matInput formControlName="color" placeholder="Ej: Negro Mate">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Material</mat-label>
+          <input matInput formControlName="material" placeholder="Ej: Acetato">
+        </mat-form-field>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <mat-form-field appearance="outline">
+          <mat-label>Precio (S/.)</mat-label>
+          <input matInput type="number" formControlName="precio">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Stock Inicial</mat-label>
+          <input matInput type="number" formControlName="stock">
+        </mat-form-field>
+      </div>
+
+      <div style="border: 2px dashed #e0e0e0; padding: 20px; border-radius: 8px; text-align: center; background: #fafafa;">
+        <mat-icon style="font-size: 2.5rem; width: 2.5rem; height: 2.5rem; color: #bdbdbd;">image</mat-icon>
+        <p style="margin: 10px 0; color: #757575;">Selecciona la foto del lente</p>
+        <input type="file" (change)="onArchivoSeleccionado($event)" accept="image/*">
+      </div>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="monturaForm.invalid || cargando" style="padding: 1.5rem; margin-top: 1rem;">
+        {{ cargando ? 'Guardando en la nube...' : 'Guardar Montura' }}
+      </button>
+    </form>
+  </mat-card>
+</div>

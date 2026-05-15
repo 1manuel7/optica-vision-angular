@@ -3,11 +3,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Montura } from '../../../core/services/models/montura.model';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-montura-card',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule], // <-- Debes agregarlos aquí
+  imports: [MatCardModule, MatButtonModule,MatIconModule], // <-- Debes agregarlos aquí
   templateUrl: './montura-card.html'
 })
 export class MonturaCardComponent {
