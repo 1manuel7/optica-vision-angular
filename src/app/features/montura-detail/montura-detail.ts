@@ -68,8 +68,7 @@ async ngOnInit() {
         this.monturaService.descontarStock(this.montura!.id);
 
         // 2. ¡NUEVO! Generamos la orden de trabajo oficial en la base de datos
-        this.ordenService.crearOrden(pacienteElegido, this.montura!);
-        
+this.ordenService.crearOrden(pacienteElegido.id, this.montura!.id, this.montura!.precio, 0);        
         // 3. Alerta de confirmación actualizada
         alert(`¡Venta Registrada! Se generó una orden PENDIENTE para ${pacienteElegido.nombre} con la montura ${this.montura?.marca}.`);
         

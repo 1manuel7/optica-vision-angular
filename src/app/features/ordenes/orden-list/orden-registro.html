@@ -1,0 +1,74 @@
+<div style="max-width: 700px; margin: 2rem auto;">
+  <mat-card style="padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <mat-card-header style="margin-bottom: 1.5rem;">
+      <mat-card-title style="color: #2e7d32; font-size: 1.6rem; display: flex; align-items: center;">
+        <mat-icon style="margin-right: 8px;">point_of_sale</mat-icon>
+        Registrar Nueva Venta
+      </mat-card-title>
+      <mat-card-subtitle>Selecciona el paciente y el lente para generar la orden</mat-card-subtitle>
+    </mat-card-header>
+
+    <form [formGroup]="ventaForm" (ngSubmit)="guardarVenta()" style="display: flex; flex-direction: column; gap: 1.5rem;">
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        
+        <mat-form-field appearance="outline">
+          <mat-label>Seleccionar Paciente</mat-label>
+          <mat-select formControlName="paciente_id">
+            @for (paciente of pacientes; track paciente.id) {
+              <mat-option [value]="paciente.id">
+                {{ paciente.nombre }} {{ paciente.apellido }} - DNI: {{ paciente.dni }}
+              </mat-option>
+            }
+          </mat-select>
+          <mat-icon matSuffix>person</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Seleccionar Lente (Con Stock)</mat-label>
+          <mat-select formControlName="montura_id">
+            @for (montura of monturas; track montura.id) {
+              <mat-option [value]="montura.id">
+                {{ montura.marca }} {{ montura.modelo }} - S/ {{ montura.precio }}
+              </mat-option>
+            }
+          </mat-select>
+          <mat-icon matSuffix>glasses</mat-icon>
+        </mat-form-field>
+
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; background: #f1f8e9; padding: 1.5rem; border-radius: 8px; border: 1px dashed #aed581;">
+        
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Precio Total (S/.)</mat-label>
+          <input matInput type="number" formControlName="monto_total">
+          <mat-icon matPrefix style="margin-right: 8px; color: #555;">payments</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Dejó a Cuenta (S/.)</mat-label>
+          <input matInput type="number" formControlName="adelanto">
+          <mat-icon matPrefix style="margin-right: 8px; color: #555;">account_balance_wallet</mat-icon>
+        </mat-form-field>
+        
+      </div>
+
+      @if (ventaForm.value.monto_total! > 0) {
+        <div style="text-align: right; padding-right: 1rem;">
+          <p style="font-size: 1.2rem; color: #616161; margin: 0;">
+            Saldo Pendiente: 
+            <strong style="color: #d32f2f;">
+              S/ {{ (ventaForm.value.monto_total || 0) - (ventaForm.value.adelanto || 0) }}
+            </strong>
+          </p>
+        </div>
+      }
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="ventaForm.invalid || cargando" style="padding: 1.5rem; font-size: 1.1rem; font-weight: bold; background-color: #2e7d32;">
+        {{ cargando ? 'Procesando Venta...' : 'Confirmar Venta y Generar Orden' }}
+      </button>
+
+    </form>
+  </mat-card>
+</div>

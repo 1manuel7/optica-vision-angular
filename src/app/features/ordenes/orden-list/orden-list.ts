@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router'; // 1. Asegúrate de tener esta importación arriba
 
 // Material para una tabla profesional
 import { MatTableModule } from '@angular/material/table';
@@ -8,6 +9,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips'; // Para etiquetas de colores
+import { MatIconModule } from '@angular/material/icon';
 
 import { OrdenService, EstadoOrden } from '../../../core/services/orden';
 
@@ -21,7 +23,8 @@ import { OrdenService, EstadoOrden } from '../../../core/services/orden';
     MatCardModule, 
     MatSelectModule, 
     MatButtonModule,
-    MatChipsModule
+    MatChipsModule,
+    MatIconModule
   ],
   templateUrl: './orden-list.html'
 })
@@ -29,6 +32,7 @@ export class OrdenListComponent {
   private ordenService = inject(OrdenService);
   
   ordenes$ = this.ordenService.ordenes$;
+  private router = inject(Router); // 2. Inyectamos el motor de rutas
   
   // Columnas para la trazabilidad total
   columnas: string[] = ['fecha', 'paciente', 'montura', 'estado', 'acciones'];
@@ -52,5 +56,8 @@ export class OrdenListComponent {
       default: 
         return {};
     }
+  }
+  irANuevaVenta() {
+    this.router.navigate(['/nueva-venta']);
   }
 }
