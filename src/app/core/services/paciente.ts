@@ -82,4 +82,25 @@ export class PacienteService {
       .single();
     return data;
   }
+
+  // BUSCAR PACIENTE CON HISTORIAL: Trae al paciente + sus órdenes + los lentes de esas órdenes
+  async getHistorialCompleto(pacienteId: string) {
+    const { data, error } = await this.supabase
+      .from('pacientes')
+      .select(`
+        *,
+        ordenes (
+          *,
+          montura:monturas(*)
+        )
+      `)
+      .eq('id', pacienteId)
+      .single(); // Exigimos que nos devuelva 1 solo paciente exacto
+
+    if (error) {
+      console.error('Error al obtener el historial clínico:', error);
+      return null;
+    }
+    return data;
+  }
 }
