@@ -1,0 +1,108 @@
+<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem; padding-bottom: 4rem;">
+  
+  <h2 style="color: #1976d2; font-size: 2.2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+    <mat-icon style="font-size: 2.5rem; width: 2.5rem; height: 2.5rem;">event_note</mat-icon>
+    Agenda de Citas
+  </h2>
+
+  <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: start;">
+    
+    <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      <mat-card-header style="background-color: #f5f5f5; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">
+        <mat-card-title style="color: #333; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+          <mat-icon color="primary">add_circle</mat-icon> Nueva Cita
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content style="padding: 1.5rem;">
+        <form [formGroup]="citaForm" (ngSubmit)="agendar()" style="display: flex; flex-direction: column; gap: 1rem;">
+          
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre del Paciente</mat-label>
+            <input matInput formControlName="paciente_nombre" placeholder="Ej. María López">
+            <mat-icon matSuffix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono (WhatsApp)</mat-label>
+            <input matInput formControlName="telefono" placeholder="Ej. 987654321">
+            <mat-icon matSuffix>phone</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de la Cita</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="fecha_ui">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Hora (Formato 24h)</mat-label>
+            <input matInput type="time" formControlName="hora_ui">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Motivo de la Cita</mat-label>
+            <mat-select formControlName="motivo">
+              <mat-option value="Medición de Vista">Medición de Vista</mat-option>
+              <mat-option value="Recojo de Lentes">Recojo de Lentes</mat-option>
+              <mat-option value="Ajuste/Reparación">Ajuste / Reparación</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <button mat-flat-button color="primary" type="submit" [disabled]="citaForm.invalid" style="height: 50px; font-size: 1.1rem; border-radius: 8px;">
+            Agendar Turno
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      <mat-card-header style="background-color: #e3f2fd; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #bbdefb;">
+        <mat-card-title style="color: #1565c0; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+          <mat-icon>view_agenda</mat-icon> Próximos Turnos
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content style="padding: 1.5rem;">
+        @if (citas.length > 0) {
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            
+            @for (cita of citas; track cita.id) {
+              <div style="border-left: 4px solid #1976d2; padding: 1rem; border-radius: 0 8px 8px 0; background: #fafafa; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                
+                <div>
+                  <p style="margin: 0 0 5px 0; font-weight: bold; color: #333; font-size: 1.1rem;">{{ cita.paciente_nombre }}</p>
+                  <p style="margin: 0 0 5px 0; font-size: 0.9rem; color: #666; display: flex; align-items: center; gap: 5px;">
+                    <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem;">schedule</mat-icon> 
+                    {{ cita.fecha | date:'EEEE, dd MMM yyyy - hh:mm a' }}
+                  </p>
+                  <p style="margin: 0; font-size: 0.85rem; color: #1976d2; font-weight: 500;">
+                    Motivo: {{ cita.motivo }} | Tel: {{ cita.telefono }}
+                  </p>
+                </div>
+
+                <mat-form-field appearance="outline" style="width: 140px; margin-bottom: -1.25rem;">
+                  <mat-select [value]="cita.estado" (selectionChange)="cambiarEstado(cita.id!, $event.value)">
+                    <mat-option value="PENDIENTE">PENDIENTE</mat-option>
+                    <mat-option value="COMPLETADO">COMPLETADO</mat-option>
+                    <mat-option value="CANCELADO">CANCELADO</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                
+              </div>
+            }
+
+          </div>
+        } @else {
+          <div style="text-align: center; padding: 3rem 0; color: #757575;">
+            <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #bdbdbd; margin-bottom: 1rem;">event_busy</mat-icon>
+            <p>No hay citas programadas por el momento.</p>
+          </div>
+        }
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

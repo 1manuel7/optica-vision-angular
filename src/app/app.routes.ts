@@ -11,12 +11,22 @@ import { HomeComponent } from './features/dashboard/home/home';
 import { PacienteDetalleComponent } from './features/pacientes/paciente-detalle/paciente-detalle';
 import { MonturaRegistroComponent } from './features/catalogo/montura-registro/montura-registro';
 import { OrdenRegistroComponent } from './features/ordenes/orden-list/orden-registro';
+// IMPORTAMOS LA NUEVA AGENDA
+import { AgendaComponent } from './features/agenda/agenda';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'nueva-venta', component: OrdenRegistroComponent, canActivate: [authGuard] },
+  
+  // El login es público, no lleva candado
+  { path: 'login', component: LoginComponent },
 
-    { 
+  // RUTAS PROTEGIDAS
+  { 
+    path: 'nueva-venta', 
+    component: OrdenRegistroComponent, 
+    canActivate: [authGuard] 
+  },
+  { 
     path: 'nuevo-paciente', 
     component: PacienteRegistroComponent,
     canActivate: [authGuard] 
@@ -31,10 +41,6 @@ export const routes: Routes = [
     component: PacienteDetalleComponent,
     canActivate: [authGuard] 
   },
-  
-  // El login es público, no lleva candado
-  { path: 'login', component: LoginComponent },
-  // RUTAS PROTEGIDAS
   { 
     path: 'dashboard', 
     component: HomeComponent,
@@ -45,8 +51,6 @@ export const routes: Routes = [
     component: PacienteListComponent,
     canActivate: [authGuard] 
   },
-  
-  // Protegemos el catálogo y el detalle con canActivate
   { 
     path: 'catalogo', 
     component: MonturaListComponent,
@@ -57,9 +61,18 @@ export const routes: Routes = [
     component: MonturaDetailComponent,
     canActivate: [authGuard] 
   },
-  { path: 'nueva-montura',
-   component: MonturaRegistroComponent, canActivate: [authGuard] },
+  { 
+    path: 'nueva-montura',
+    component: MonturaRegistroComponent, 
+    canActivate: [authGuard] 
+  },
+  // NUESTRA NUEVA RUTA PARA LA AGENDA DE CITAS
+  {
+    path: 'agenda',
+    component: AgendaComponent,
+    canActivate: [authGuard]
+  },
   
-  { path: '**', redirectTo: 'login' },
-
+  // Ruta comodín (siempre al final)
+  { path: '**', redirectTo: 'login' }
 ];

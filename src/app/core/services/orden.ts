@@ -103,4 +103,20 @@ export class OrdenService {
       console.error('Error al actualizar el estado de la orden:', error);
     }
   }
+  // --- NUEVA FUNCIÓN: LIQUIDAR SALDO ---
+  async registrarPagoSaldo(id: string, montoTotal: number) {
+    const { error } = await this.supabase
+      .from('ordenes')
+      .update({ 
+        adelanto: montoTotal,   // El dinero adelantado ahora iguala al total
+        estado: 'ENTREGADO'     // Asumimos que si paga el resto, es porque se lo lleva
+      })
+      .eq('id', id);
+
+    if (!error) {
+      await this.cargarOrdenes(); // Refrescamos la lista de órdenes
+    } else {
+      console.error('Error al registrar el pago en Supabase:', error);
+    }
+  }
 }

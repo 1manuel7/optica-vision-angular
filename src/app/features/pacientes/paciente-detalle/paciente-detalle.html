@@ -20,45 +20,80 @@
     
     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
       
-      <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <mat-card-header style="background-color: #f5f5f5; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">
-          <mat-card-title style="color: #1976d2; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-            <mat-icon>edit_document</mat-icon> Actualizar Datos y Receta
-          </mat-card-title>
-        </mat-card-header>
+      <div style="display: flex; flex-direction: column; gap: 2rem;">
+        
+        <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+          <mat-card-header style="background-color: #f5f5f5; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">
+            <mat-card-title style="color: #1976d2; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+              <mat-icon>edit_document</mat-icon> Actualizar Datos y Receta
+            </mat-card-title>
+          </mat-card-header>
 
-        <mat-card-content style="padding: 1.5rem;">
-          <form [formGroup]="pacienteForm" (ngSubmit)="guardarCambios()" style="display: flex; flex-direction: column; gap: 1rem;">
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-              <mat-form-field appearance="outline"><mat-label>Nombre Completo</mat-label><input matInput formControlName="nombre"></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>DNI</mat-label><input matInput formControlName="dni"></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Teléfono</mat-label><input matInput formControlName="telefono"></mat-form-field>
-            </div>
+          <mat-card-content style="padding: 1.5rem;">
+            <form [formGroup]="pacienteForm" (ngSubmit)="guardarCambios()" style="display: flex; flex-direction: column; gap: 1rem;">
+              
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <mat-form-field appearance="outline"><mat-label>Nombre Completo</mat-label><input matInput formControlName="nombre"></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>DNI</mat-label><input matInput formControlName="dni"></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Teléfono</mat-label><input matInput formControlName="telefono"></mat-form-field>
+              </div>
 
-            <mat-divider style="margin: 0.5rem 0;"></mat-divider>
-            
-            <h3 style="margin: 0; color: #d32f2f;">Ojo Derecho (OD)</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-              <mat-form-field appearance="outline"><mat-label>Esfera (ESF)</mat-label><input matInput formControlName="esferaOD"></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Cilindro (CIL)</mat-label><input matInput formControlName="cilindroOD"></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Eje</mat-label><input matInput formControlName="ejeOD"></mat-form-field>
-            </div>
+              <mat-divider style="margin: 0.5rem 0;"></mat-divider>
+              
+              <h3 style="margin: 0; color: #d32f2f;">Ojo Derecho (OD)</h3>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <mat-form-field appearance="outline"><mat-label>Esfera (ESF)</mat-label><input matInput formControlName="esferaOD"></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Cilindro (CIL)</mat-label><input matInput formControlName="cilindroOD"></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Eje</mat-label><input matInput formControlName="ejeOD"></mat-form-field>
+              </div>
 
-            <h3 style="margin: 0.5rem 0 0; color: #1976d2;">Ojo Izquierdo (OI)</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-              <mat-form-field appearance="outline"><mat-label>Esfera (ESF)</mat-label><input matInput formControlName="esferaOI"></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Cilindro (CIL)</mat-label><input matInput formControlName="cilindroOI"></mat-form-field>
-              <mat-form-field appearance="outline"><mat-label>Eje</mat-label><input matInput formControlName="ejeOI"></mat-form-field>
-            </div>
+              <h3 style="margin: 0.5rem 0 0; color: #1976d2;">Ojo Izquierdo (OI)</h3>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
+                <mat-form-field appearance="outline"><mat-label>Esfera (ESF)</mat-label><input matInput formControlName="esferaOI"></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Cilindro (CIL)</mat-label><input matInput formControlName="cilindroOI"></mat-form-field>
+                <mat-form-field appearance="outline"><mat-label>Eje</mat-label><input matInput formControlName="ejeOI"></mat-form-field>
+              </div>
 
-            <button mat-flat-button color="primary" type="submit" [disabled]="pacienteForm.invalid" style="height: 50px; font-size: 1.1rem; border-radius: 8px; margin-top: 1rem;">
-              💾 Guardar Cambios en la Nube
+              <button mat-flat-button color="primary" type="submit" [disabled]="pacienteForm.invalid" style="height: 50px; font-size: 1.1rem; border-radius: 8px; margin-top: 1rem;">
+                💾 Guardar Cambios en la Nube
+              </button>
+            </form>
+          </mat-card-content>
+        </mat-card>
+
+        <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #ce93d8;">
+          <mat-card-header style="background: linear-gradient(135deg, #f3e5f5, #e1bee7); padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #ce93d8;">
+            <mat-card-title style="color: #6a1b9a; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+              <mat-icon>auto_awesome</mat-icon> Asistente Clínico IA
+            </mat-card-title>
+          </mat-card-header>
+
+          <mat-card-content style="padding: 1.5rem;">
+            <p style="color: #555; margin-bottom: 1.5rem;">Genera un análisis optométrico automático y recomendaciones personalizadas basadas en la medida actual del paciente utilizando Inteligencia Artificial.</p>
+
+            <button mat-flat-button style="background-color: #9c27b0; color: white; width: 100%; height: 50px; font-size: 1.1rem; border-radius: 8px;" (click)="generarAnalisisIA()" [disabled]="cargandoIA">
+              @if (cargandoIA) {
+                <mat-icon style="animation: spin 2s linear infinite;">hourglass_empty</mat-icon>
+              } @else {
+                <mat-icon>psychology</mat-icon>
+              }
+              
+              @if (cargandoIA) {
+                <span>Analizando medidas...</span>
+              } @else {
+                <span>Generar Recomendación Profesional</span>
+              }
             </button>
-          </form>
-        </mat-card-content>
-      </mat-card>
 
+            @if (analisisIA) {
+              <div style="margin-top: 1.5rem; padding: 1.5rem; background-color: #fafafa; border-radius: 8px; border-left: 5px solid #ab47bc; font-size: 1rem; line-height: 1.6; color: #333; white-space: pre-wrap; font-family: 'Roboto', sans-serif;">
+                {{ analisisIA }}
+              </div>
+            }
+          </mat-card-content>
+        </mat-card>
+
+      </div>
       <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
         <mat-card-header style="background-color: #e8f5e9; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #c8e6c9;">
           <mat-card-title style="color: #2e7d32; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
@@ -73,10 +108,16 @@
               @for (orden of historialOrdenes; track orden.id) {
                 <div style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px; background: #fafafa; position: relative;">
                   
-                  <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; color: #666; display: flex; align-items: center; gap: 4px;">
-                    <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem;">event</mat-icon> 
-                    {{ orden.fecha | date:'dd/MM/yyyy hh:mm a' }}
-                  </p>
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                    <p style="margin: 0; font-size: 0.85rem; color: #666; display: flex; align-items: center; gap: 4px;">
+                      <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem;">event</mat-icon> 
+                      {{ orden.fecha | date:'dd/MM/yyyy hh:mm a' }}
+                    </p>
+                    
+                    <button mat-icon-button style="color: #1976d2; background: #e3f2fd; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;" (click)="imprimirTicket(orden)" title="Imprimir Ticket de Venta">
+                      <mat-icon style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem;">receipt_long</mat-icon>
+                    </button>
+                  </div>
                   
                   <p style="margin: 0 0 0.5rem 0; font-weight: bold; color: #333; font-size: 1.05rem;">
                     {{ orden.montura?.marca || 'Lente' }} - {{ orden.montura?.modelo || 'Genérico' }}
@@ -85,10 +126,17 @@
                   <div style="font-size: 0.85rem; color: #555; margin-bottom: 0.8rem; background: #fff; padding: 8px; border-radius: 6px; border: 1px dashed #ccc;">
                     <div style="display: flex; justify-content: space-between;"><span>Total:</span> <strong>S/ {{ orden.monto_total || 0 }}</strong></div>
                     <div style="display: flex; justify-content: space-between;"><span>A cuenta:</span> <strong>S/ {{ orden.adelanto || 0 }}</strong></div>
-                    <div style="display: flex; justify-content: space-between; color: #d32f2f; margin-top: 4px; border-top: 1px solid #eee; padding-top: 4px;">
-                      <span>Saldo:</span> <strong>S/ {{ (orden.monto_total || 0) - (orden.adelanto || 0) }}</strong>
+                    
+                    <div style="display: flex; justify-content: space-between; color: #d32f2f; margin-top: 4px; border-top: 1px solid #eee; padding-top: 4px; align-items: center;">
+                      <span>Saldo Pendiente:</span> <strong>S/ {{ (orden.monto_total || 0) - (orden.adelanto || 0) }}</strong>
                     </div>
-                  </div>
+
+                    @if ((orden.monto_total || 0) - (orden.adelanto || 0) > 0) {
+                      <button mat-button style="background-color: #4caf50; color: white; width: 100%; margin-top: 12px; border-radius: 6px; font-weight: bold;" (click)="pagarSaldo(orden)">
+                        <mat-icon style="margin-right: 5px;">payments</mat-icon> Registrar Pago de Saldo
+                      </button>
+                    }
+                    </div>
 
                   <div>
                     @if (orden.estado === 'PENDIENTE') {

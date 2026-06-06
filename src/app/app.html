@@ -5,17 +5,22 @@
       <a routerLink="/dashboard" style="color: white; text-decoration: none; font-weight: bold;">Dashboard</a>
       <a routerLink="/catalogo" style="color: white; text-decoration: none; font-weight: bold;">Catálogo</a>
       <a routerLink="/directorio" style="color: white; text-decoration: none; font-weight: bold;">Pacientes</a>
-      <a routerLink="/nuevo-paciente" style="color: white; text-decoration: none; font-weight: bold; margin-right: 1rem;">Nuevo Paciente</a>
-      <a routerLink="/pedidos" style="color: white; text-decoration: none; font-weight: bold;">Pedidos/Laboratorio</a>
+      <a routerLink="/nuevo-paciente" style="color: white; text-decoration: none; font-weight: bold;">Nuevo Paciente</a>
+      
+      <a routerLink="/agenda" style="color: #64b5f6; text-decoration: none; font-weight: bold;">Agenda</a>
+      
+      <a routerLink="/pedidos" style="color: white; text-decoration: none; font-weight: bold; margin-right: 1rem;">Pedidos/Laboratorio</a>
 
       <button (click)="cerrarSesion()" style="background: #dc3545; color: white; border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: bold;">
         Salir
       </button>
       <button mat-icon-button (click)="themeService.toggleDarkMode()" style="color: inherit;" matTooltip="Cambiar Tema">
-  @if (themeService.isDarkMode$ | async) {
-    <mat-icon style="color: #ffca28;">light_mode</mat-icon> } @else {
-    <mat-icon style="color: #5c6bc0;">dark_mode</mat-icon> }
-</button>
+        @if (themeService.isDarkMode$ | async) {
+          <mat-icon style="color: #ffca28;">light_mode</mat-icon> 
+        } @else {
+          <mat-icon style="color: #5c6bc0;">dark_mode</mat-icon> 
+        }
+      </button>
     </nav>
   </header>
 }
