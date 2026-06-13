@@ -114,9 +114,14 @@
                       {{ orden.fecha | date:'dd/MM/yyyy hh:mm a' }}
                     </p>
                     
-                    <button mat-icon-button style="color: #1976d2; background: #e3f2fd; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;" (click)="imprimirTicket(orden)" title="Imprimir Ticket de Venta">
-                      <mat-icon style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem;">receipt_long</mat-icon>
-                    </button>
+                    <div style="display: flex; gap: 8px;">
+                      <button mat-icon-button style="color: #ef6c00; background: #fff3e0; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;" (click)="enviarTicketCorreo(orden)" title="Enviar Ticket por Correo">
+                        <mat-icon style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem;">mail</mat-icon>
+                      </button>
+                      <button mat-icon-button style="color: #1976d2; background: #e3f2fd; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;" (click)="imprimirTicket(orden)" title="Imprimir Ticket de Venta">
+                        <mat-icon style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem;">receipt_long</mat-icon>
+                      </button>
+                    </div>
                   </div>
                   
                   <p style="margin: 0 0 0.5rem 0; font-weight: bold; color: #333; font-size: 1.05rem;">

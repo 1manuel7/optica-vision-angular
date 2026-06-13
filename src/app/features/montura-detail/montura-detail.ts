@@ -25,7 +25,7 @@ export class MonturaDetailComponent implements OnInit {
   private ordenService = inject(OrdenService); // Inyección de órdenes
   private cdr = inject(ChangeDetectorRef); // <-- 1. Inyectamos la herramienta
 
-async ngOnInit() {
+  async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
@@ -67,8 +67,9 @@ async ngOnInit() {
         // 1. Ejecutamos la lógica de negocio: ¡Descontar del inventario!
         this.monturaService.descontarStock(this.montura!.id);
 
-        // 2. ¡NUEVO! Generamos la orden de trabajo oficial en la base de datos
-this.ordenService.crearOrden(pacienteElegido.id, this.montura!.id, this.montura!.precio, 0);        
+        // 2. ¡NUEVO! Generamos la orden de trabajo oficial (¡Enviando la nota vacía al final!)
+        this.ordenService.crearOrden(pacienteElegido.id, this.montura!.id, this.montura!.precio, 0, '');        
+        
         // 3. Alerta de confirmación actualizada
         alert(`¡Venta Registrada! Se generó una orden PENDIENTE para ${pacienteElegido.nombre} con la montura ${this.montura?.marca}.`);
         

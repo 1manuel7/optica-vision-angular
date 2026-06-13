@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import emailjs from '@emailjs/browser';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -86,7 +87,7 @@ export class PacienteDetalleComponent implements OnInit {
 
   async guardarCambios() {
     if (this.pacienteForm.valid) {
-      try {11
+      try {
         await this.pacienteService.actualizarPaciente(this.pacienteId, this.pacienteForm.value);
         alert('¡Datos actualizados en la nube correctamente!');
         this.router.navigate(['/directorio']);
@@ -124,6 +125,44 @@ export class PacienteDetalleComponent implements OnInit {
       orden.estado = 'ENTREGADO';
       
       alert('¡Pago registrado y orden completada con éxito!');
+    }
+  }
+
+  // --- NUEVA FUNCIÓN: ENVIAR CORREO ---
+  async enviarTicketCorreo(orden: any) {
+    const correo = prompt(`Ingrese el correo electrónico de ${this.pacienteActual.nombre} para enviar el ticket:`);
+
+    if (correo) {
+      const descripcionMontura = orden.montura ? `${orden.montura.marca} - ${orden.montura.modelo}` : 'Montura Genérica';
+      const saldo = (orden.monto_total || 0) - (orden.adelanto || 0);
+
+      // Preparamos los datos que viajarán a la plantilla del correo
+      const templateParams = {
+        to_email: correo,
+        paciente_nombre: this.pacienteActual.nombre,
+        fecha: new Date(orden.fecha || Date.now()).toLocaleDateString(),
+        descripcion: descripcionMontura,
+        notas_lab: orden.notas_laboratorio || 'N/A',
+        total: orden.monto_total,
+        adelanto: orden.adelanto,
+        saldo: saldo
+      };
+
+      try {
+        console.log('Enviando correo...', templateParams);
+        
+        await emailjs.send(
+          'service_9lkhpzq',    // REEMPLAZAR AQUÍ
+          'template_v4aqakl',   // REEMPLAZAR AQUÍ
+          templateParams,
+          'cY_7usaVDwoY1DtN-'     // REEMPLAZAR AQUÍ
+        );
+        
+        alert('📧 ¡Ticket digital enviado con éxito al correo del paciente!');
+      } catch (error) {
+        console.error('Error enviando correo:', error);
+        alert('❌ Hubo un error al intentar enviar el correo. Revisa la consola.');
+      }
     }
   }
 
@@ -232,26 +271,36 @@ export class PacienteDetalleComponent implements OnInit {
     doc.text(lineasMontura, 5, 68);
     doc.text(`S/ ${orden.monto_total}`, 62, 68);
 
-    doc.line(5, 80, 75, 80); 
+    // --- NUEVO BLOQUE: NOTAS DE LABORATORIO ---
+    if (orden.notas_laboratorio) {
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100); 
+      const lineasNotas = doc.splitTextToSize(`Lab: ${orden.notas_laboratorio}`, 65);
+      doc.text(lineasNotas, 5, 74); 
+      doc.setTextColor(0, 0, 0); 
+    }
 
-    doc.text('TOTAL:', 35, 88);
+    doc.line(5, 83, 75, 83); 
+
+    doc.setFontSize(9);
+    doc.text('TOTAL:', 35, 91);
     doc.setFont('helvetica', 'bold');
-    doc.text(`S/ ${orden.monto_total}`, 62, 88);
+    doc.text(`S/ ${orden.monto_total}`, 62, 91);
     doc.setFont('helvetica', 'normal');
 
-    doc.text('A CUENTA:', 35, 95);
-    doc.text(`S/ ${orden.adelanto}`, 62, 95);
+    doc.text('A CUENTA:', 35, 98);
+    doc.text(`S/ ${orden.adelanto}`, 62, 98);
 
-    doc.text('SALDO:', 35, 102);
+    doc.text('SALDO:', 35, 105);
     doc.setFont('helvetica', 'bold');
     const saldo = (orden.monto_total || 0) - (orden.adelanto || 0);
-    doc.text(`S/ ${saldo}`, 62, 102);
+    doc.text(`S/ ${saldo}`, 62, 105);
 
     doc.setFontSize(8);
     doc.setFont('helvetica', 'normal');
-    doc.text('¡Gracias por su preferencia!', 40, 115, { align: 'center' });
-    doc.text('Conserve este ticket para recoger', 40, 120, { align: 'center' });
-    doc.text('sus anteojos en laboratorio.', 40, 124, { align: 'center' });
+    doc.text('¡Gracias por su preferencia!', 40, 118, { align: 'center' });
+    doc.text('Conserve este ticket para recoger', 40, 123, { align: 'center' });
+    doc.text('sus anteojos en laboratorio.', 40, 127, { align: 'center' });
 
     doc.save(`Ticket_${this.pacienteActual.nombre.replace(/\s+/g, '_')}_${fechaFormat}.pdf`);
   }

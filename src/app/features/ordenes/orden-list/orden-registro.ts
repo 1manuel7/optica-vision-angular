@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select'; // <-- ¡NUEVO! Para las listas desplegables
+import { MatSelectModule } from '@angular/material/select'; 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -15,7 +15,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 // Tus Servicios
 import { OrdenService } from '../../../core/services/orden';
 import { MonturaService } from '../../../core/services/montura';
-import { PacienteService } from '../../../core/services/paciente'; // Asegúrate de tener la ruta correcta
+import { PacienteService } from '../../../core/services/paciente'; 
 
 @Component({
   selector: 'app-orden-registro',
@@ -49,7 +49,8 @@ export class OrdenRegistroComponent implements OnInit {
     paciente_id: ['', Validators.required],
     montura_id: ['', Validators.required],
     monto_total: [0, [Validators.required, Validators.min(1)]],
-    adelanto: [0, [Validators.required, Validators.min(0)]]
+    adelanto: [0, [Validators.required, Validators.min(0)]],
+    notas_laboratorio: [''] // <-- 1. AQUÍ AGREGAMOS EL NUEVO CAMPO VACÍO
   });
 
   ngOnInit() {
@@ -72,26 +73,34 @@ export class OrdenRegistroComponent implements OnInit {
     });
   }
 
-  async guardarVenta() {
+ async guardarVenta() {
     if (this.ventaForm.invalid) return;
 
     this.cargando = true;
-    const { paciente_id, montura_id, monto_total, adelanto } = this.ventaForm.value;
+    
+    // 1. Extraemos los valores forzando el tipo exacto para evitar errores de TypeScript (el "as string" o los "||")
+    const paciente_id = this.ventaForm.value.paciente_id as string;
+    const montura_id = this.ventaForm.value.montura_id as string;
+    const monto_total = Number(this.ventaForm.value.monto_total || 0);
+    const adelanto = Number(this.ventaForm.value.adelanto || 0);
+    const notas_laboratorio = this.ventaForm.value.notas_laboratorio ? String(this.ventaForm.value.notas_laboratorio) : '';
 
+    // 2. Enviamos los datos 100% seguros al servicio
     const exito = await this.ordenService.crearOrden(
-      paciente_id!, 
-      montura_id!, 
-      Number(monto_total), 
-      Number(adelanto)
+      paciente_id, 
+      montura_id, 
+      monto_total, 
+      adelanto,
+      notas_laboratorio
     );
     
     this.cargando = false;
     
     if (exito) {
-      this.snackBar.open('✅ Venta registrada y stock descontado', 'Cerrar', {
+      this.snackBar.open('✅ Venta registrada y orden enviada a laboratorio', 'Cerrar', {
         duration: 3500, horizontalPosition: 'center', verticalPosition: 'bottom'
       });
-      this.router.navigate(['/pedidos']); // Redirige a la lista de laboratorio
+      this.router.navigate(['/pedidos']); // Redirige a la lista
     } else {
       this.snackBar.open('❌ Error al registrar la venta.', 'Cerrar', { duration: 4000 });
     }

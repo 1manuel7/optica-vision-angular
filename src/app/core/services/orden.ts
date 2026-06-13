@@ -14,6 +14,7 @@ export interface OrdenTrabajo {
   montura_id?: string;
   estado: string;
   fecha?: string;
+  notas_laboratorio?: string;
   
   // ¡NUEVAS COLUMNAS! Acopladas para el control financiero de la venta
   monto_total?: number;
@@ -54,16 +55,18 @@ export class OrdenService {
     }
   }
 
-  // ESCRIBIR: Genera la orden al vender, descuenta stock y retorna éxito/error
-  async crearOrden(pacienteId: string, monturaId: string, montoTotal: number, adelanto: number): Promise<boolean> {
+  // ESCRIBIR: Genera la orden al vender, descuenta stock, anota lunas y retorna éxito/error
+  // ¡AQUÍ ESTÁ EL CAMBIO! Agregamos notasLab como el 5to parámetro
+  async crearOrden(pacienteId: string, monturaId: string, montoTotal: number, adelanto: number, notasLab: string): Promise<boolean> {
     try {
-      // 1. Estructuramos el registro con los nuevos campos de dinero
+      // 1. Estructuramos el registro con los nuevos campos de dinero Y notas de laboratorio
       const nuevaOrden = {
         paciente_id: pacienteId,
         montura_id: monturaId,
         estado: 'PENDIENTE',
         monto_total: montoTotal,
-        adelanto: adelanto
+        adelanto: adelanto,
+        notas_laboratorio: notasLab // <-- ¡ACABAMOS DE CONECTAR EL CAMPO CON SUPABASE AQUÍ!
       };
 
       // 2. Insertamos la orden en la tabla
@@ -103,6 +106,7 @@ export class OrdenService {
       console.error('Error al actualizar el estado de la orden:', error);
     }
   }
+
   // --- NUEVA FUNCIÓN: LIQUIDAR SALDO ---
   async registrarPagoSaldo(id: string, montoTotal: number) {
     const { error } = await this.supabase
