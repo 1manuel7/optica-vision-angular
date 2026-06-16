@@ -46,12 +46,23 @@
       Ver Detalles
     </button>
 
-    <button mat-stroked-button 
-            color="primary" 
-            style="width: 100%; border-radius: 8px; border-color: #1976d2;"
-            (click)="reabastecer()">
-      <mat-icon>add_box</mat-icon> Añadir Stock
-    </button>
+    <div style="display: flex; gap: 10px;">
+      <button mat-stroked-button 
+              color="primary" 
+              style="flex: 1; border-radius: 8px; border-color: #1976d2;"
+              (click)="reabastecer()"
+              title="Añadir Stock">
+        <mat-icon>add_box</mat-icon> Stock
+      </button>
+
+      <button mat-stroked-button 
+              color="warn" 
+              style="flex: 1; border-radius: 8px; border-color: #d32f2f; color: #d32f2f;"
+              (click)="borrar()"
+              title="Eliminar Montura">
+        <mat-icon>delete</mat-icon> Borrar
+      </button>
+    </div>
 
   </div>
 </mat-card>

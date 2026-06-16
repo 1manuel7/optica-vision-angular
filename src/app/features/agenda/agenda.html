@@ -25,8 +25,11 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Teléfono (WhatsApp)</mat-label>
-            <input matInput formControlName="telefono" placeholder="Ej. 987654321">
+            <input matInput formControlName="telefono" placeholder="Ej. 987654321" maxlength="9">
             <mat-icon matSuffix>phone</mat-icon>
+            @if (citaForm.get('telefono')?.hasError('pattern')) {
+              <mat-error>Debe empezar con 9 y tener 9 dígitos</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
@@ -51,58 +54,89 @@
             </mat-select>
           </mat-form-field>
 
-          <button mat-flat-button color="primary" type="submit" [disabled]="citaForm.invalid" style="height: 50px; font-size: 1.1rem; border-radius: 8px;">
+          <button mat-flat-button color="primary" type="submit" style="height: 50px; font-size: 1.1rem; border-radius: 8px;">
             Agendar Turno
           </button>
         </form>
       </mat-card-content>
     </mat-card>
 
-    <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-      <mat-card-header style="background-color: #e3f2fd; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #bbdefb;">
-        <mat-card-title style="color: #1565c0; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
-          <mat-icon>view_agenda</mat-icon> Próximos Turnos
-        </mat-card-title>
-      </mat-card-header>
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
       
-      <mat-card-content style="padding: 1.5rem;">
-        @if (citas.length > 0) {
-          <div style="display: flex; flex-direction: column; gap: 1rem;">
-            
-            @for (cita of citas; track cita.id) {
-              <div style="border-left: 4px solid #1976d2; padding: 1rem; border-radius: 0 8px 8px 0; background: #fafafa; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                
-                <div>
-                  <p style="margin: 0 0 5px 0; font-weight: bold; color: #333; font-size: 1.1rem;">{{ cita.paciente_nombre }}</p>
-                  <p style="margin: 0 0 5px 0; font-size: 0.9rem; color: #666; display: flex; align-items: center; gap: 5px;">
-                    <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem;">schedule</mat-icon> 
-                    {{ cita.fecha | date:'EEEE, dd MMM yyyy - hh:mm a' }}
-                  </p>
-                  <p style="margin: 0; font-size: 0.85rem; color: #1976d2; font-weight: 500;">
-                    Motivo: {{ cita.motivo }} | Tel: {{ cita.telefono }}
-                  </p>
+      <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <mat-card-header style="background-color: #e3f2fd; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #bbdefb;">
+          <mat-card-title style="color: #1565c0; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+            <mat-icon>view_agenda</mat-icon> Próximos Turnos
+          </mat-card-title>
+        </mat-card-header>
+        
+        <mat-card-content style="padding: 1.5rem;">
+          @if (citasPendientes.length > 0) {
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              @for (cita of citasPendientes; track cita.id) {
+                <div style="border-left: 4px solid #1976d2; padding: 1rem; border-radius: 0 8px 8px 0; background: #fafafa; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                  <div>
+                    <p style="margin: 0 0 5px 0; font-weight: bold; color: #333; font-size: 1.1rem;">{{ cita.paciente_nombre }}</p>
+                    <p style="margin: 0 0 5px 0; font-size: 0.9rem; color: #666; display: flex; align-items: center; gap: 5px;">
+                      <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem;">schedule</mat-icon> 
+                      {{ cita.fecha | date:'EEEE, dd MMM yyyy - hh:mm a' }}
+                    </p>
+                    <p style="margin: 0; font-size: 0.85rem; color: #1976d2; font-weight: 500;">
+                      Motivo: {{ cita.motivo }} | Tel: {{ cita.telefono }}
+                    </p>
+                  </div>
+                  <mat-form-field appearance="outline" style="width: 140px; margin-bottom: -1.25rem;">
+                    <mat-select [value]="cita.estado" (selectionChange)="cambiarEstado(cita.id!, $event.value)">
+                      <mat-option value="PENDIENTE">PENDIENTE</mat-option>
+                      <mat-option value="COMPLETADO">COMPLETAR</mat-option>
+                      <mat-option value="CANCELADO">CANCELAR</mat-option>
+                    </mat-select>
+                  </mat-form-field>
                 </div>
+              }
+            </div>
+          } @else {
+            <div style="text-align: center; padding: 2rem 0; color: #757575;">
+              <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #bdbdbd; margin-bottom: 1rem;">event_available</mat-icon>
+              <p>No hay citas pendientes por el momento.</p>
+            </div>
+          }
+        </mat-card-content>
+      </mat-card>
 
-                <mat-form-field appearance="outline" style="width: 140px; margin-bottom: -1.25rem;">
-                  <mat-select [value]="cita.estado" (selectionChange)="cambiarEstado(cita.id!, $event.value)">
-                    <mat-option value="PENDIENTE">PENDIENTE</mat-option>
-                    <mat-option value="COMPLETADO">COMPLETADO</mat-option>
-                    <mat-option value="CANCELADO">CANCELADO</mat-option>
-                  </mat-select>
-                </mat-form-field>
-                
-              </div>
-            }
+      @if (citasPasadas.length > 0) {
+        <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); opacity: 0.8;">
+          <mat-card-header style="background-color: #eeeeee; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #e0e0e0;">
+            <mat-card-title style="color: #616161; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <mat-icon>history</mat-icon> Historial de Citas
+            </mat-card-title>
+          </mat-card-header>
+          
+          <mat-card-content style="padding: 1.5rem;">
+            <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+              @for (cita of citasPasadas; track cita.id) {
+                <div [style.border-left]="cita.estado === 'COMPLETADO' ? '4px solid #4caf50' : '4px solid #d32f2f'" 
+                     style="padding: 0.8rem 1rem; border-radius: 0 6px 6px 0; background: #fafafa; display: flex; justify-content: space-between; align-items: center;">
+                  
+                  <div>
+                    <p style="margin: 0 0 3px 0; font-weight: bold; color: #555;">{{ cita.paciente_nombre }}</p>
+                    <p style="margin: 0; font-size: 0.8rem; color: #777;">
+                      {{ cita.fecha | date:'dd/MM/yy - hh:mm a' }}
+                    </p>
+                  </div>
+                  
+                  <span [style.background]="cita.estado === 'COMPLETADO' ? '#e8f5e9' : '#ffebee'"
+                        [style.color]="cita.estado === 'COMPLETADO' ? '#2e7d32' : '#c62828'"
+                        style="padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">
+                    {{ cita.estado }}
+                  </span>
+                </div>
+              }
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
 
-          </div>
-        } @else {
-          <div style="text-align: center; padding: 3rem 0; color: #757575;">
-            <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #bdbdbd; margin-bottom: 1rem;">event_busy</mat-icon>
-            <p>No hay citas programadas por el momento.</p>
-          </div>
-        }
-      </mat-card-content>
-    </mat-card>
-
+    </div>
   </div>
 </div>

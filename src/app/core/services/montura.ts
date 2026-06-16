@@ -131,4 +131,20 @@ export class MonturaService {
     await this.cargarMonturas();
     return true;
   }
+
+  // --- NUEVA FUNCIÓN: ELIMINAR MONTURA DEL CATÁLOGO ---
+  async eliminarMontura(id: string): Promise<boolean> {
+    const { error } = await this.supabase
+      .from('monturas')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error al eliminar montura:', error);
+      return false;
+    }
+
+    await this.cargarMonturas(); // Refrescamos la lista
+    return true;
+  }
 }

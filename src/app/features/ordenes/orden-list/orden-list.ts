@@ -1,17 +1,17 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router'; // 1. Asegúrate de tener esta importación arriba
+import { Router } from '@angular/router'; 
 
-// Material para una tabla profesional
 import { MatTableModule } from '@angular/material/table';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips'; // Para etiquetas de colores
+import { MatChipsModule } from '@angular/material/chips'; 
 import { MatIconModule } from '@angular/material/icon';
 
 import { OrdenService, EstadoOrden } from '../../../core/services/orden';
+import Swal from 'sweetalert2'; // <-- IMPORTAMOS LAS ALERTAS
 
 @Component({
   selector: 'app-orden-list',
@@ -28,35 +28,43 @@ import { OrdenService, EstadoOrden } from '../../../core/services/orden';
   ],
   templateUrl: './orden-list.html'
 })
-export class OrdenListComponent {
+export class OrdenListComponent implements OnInit {
   private ordenService = inject(OrdenService);
+  private router = inject(Router); 
+  private cdr = inject(ChangeDetectorRef);
   
-  ordenes$ = this.ordenService.ordenes$;
-  private router = inject(Router); // 2. Inyectamos el motor de rutas
-  
-  // Columnas para la trazabilidad total
   columnas: string[] = ['fecha', 'paciente', 'montura', 'estado', 'acciones'];
-
-  // Los estados posibles para el menú desplegable
   estados: EstadoOrden[] = ['PENDIENTE', 'EN PROCESO', 'ENTREGADO'];
+
+  // <-- Dividimos las órdenes en dos arreglos -->
+  ordenesActivas: any[] = [];
+  ordenesHistorial: any[] = [];
+
+  ngOnInit() {
+    this.ordenService.ordenes$.subscribe(data => {
+      // Activas: Pendientes (para enviar al laboratorio) o En Proceso (haciéndose)
+      this.ordenesActivas = data.filter(o => o.estado === 'PENDIENTE' || o.estado === 'EN PROCESO');
+      // Historial: Ya entregadas al paciente
+      this.ordenesHistorial = data.filter(o => o.estado === 'ENTREGADO');
+      
+      this.cdr.detectChanges(); 
+    });
+  }
 
   cambiarEstado(id: string, nuevoEstado: any) {
     this.ordenService.actualizarEstado(id, nuevoEstado);
+    
+    // Alerta rápida y elegante que no interrumpe el flujo
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 2000,
+      icon: 'success',
+      title: `Orden actualizada a: ${nuevoEstado}`
+    });
   }
 
- // Función para darle un estilo corporativo a los estados
-  getEstadoStyle(estado: string) {
-    switch (estado) {
-      case 'Pendiente': 
-        return { 'background-color': '#fff3cd', 'color': '#856404', 'font-weight': 'bold', 'padding': '6px 12px', 'border-radius': '16px', 'display': 'inline-block' };
-      case 'En Proceso': 
-        return { 'background-color': '#cce5ff', 'color': '#004085', 'font-weight': 'bold', 'padding': '6px 12px', 'border-radius': '16px', 'display': 'inline-block' };
-      case 'Entregado': 
-        return { 'background-color': '#d4edda', 'color': '#155724', 'font-weight': 'bold', 'padding': '6px 12px', 'border-radius': '16px', 'display': 'inline-block' };
-      default: 
-        return {};
-    }
-  }
   irANuevaVenta() {
     this.router.navigate(['/nueva-venta']);
   }
