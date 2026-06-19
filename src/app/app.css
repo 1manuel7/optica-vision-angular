@@ -1,0 +1,160 @@
+/* app.css - Tema Global SaaS */
+
+.layout-container {
+  display: flex;
+  height: 100vh;
+  background-color: #0f172a; /* Azul noche profundo para el fondo global */
+  color: #f8fafc;
+  overflow: hidden;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* --- SIDEBAR LATERAL --- */
+.sidebar {
+  width: 260px;
+  background-color: #1e293b; /* Un tono ligeramente más claro que el fondo */
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #334155;
+}
+
+.sidebar-logo {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid #334155;
+}
+
+.logo-icon {
+  background: linear-gradient(135deg, #0ea5e9, #2563eb); /* Azul y Celeste vibrante */
+  border-radius: 8px;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-section {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  margin: 1.5rem 0 0.5rem;
+  padding-left: 1rem;
+}
+
+.sidebar-nav {
+  flex-grow: 1;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+
+.nav-item {
+  color: #cbd5e1;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* Efecto al pasar el mouse por los enlaces */
+.nav-item:hover {
+  background-color: #334155;
+  color: white;
+}
+
+/* Efecto iluminado tipo NEÓN para la página en la que te encuentras */
+.nav-item.active-link {
+  background: linear-gradient(90deg, rgba(14,165,233,0.15) 0%, rgba(37,99,235,0) 100%);
+  color: #0ea5e9;
+  border-left: 4px solid #0ea5e9;
+}
+
+.sidebar-footer {
+  padding: 1.5rem 1rem;
+  border-top: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669); /* Verde estado conectado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-size: 1.1rem;
+}
+
+/* --- ÁREA PRINCIPAL --- */
+.main-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #0f172a;
+}
+
+.topbar {
+  height: 70px;
+  background-color: #1e293b;
+  border-bottom: 1px solid #334155;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+}
+
+.content-area {
+  flex-grow: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Personalización del scroll para que se vea moderno */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #0f172a; 
+}
+::-webkit-scrollbar-thumb {
+  background: #334155; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569; 
+}
+/* Forzar que los inputs de Material se adapten al Modo Oscuro */
+.mdc-text-field--outlined {
+  --mdc-outlined-text-field-container-color: #0f172a !important;
+  --mdc-outlined-text-field-outline-color: #334155 !important;
+  --mdc-outlined-text-field-hover-outline-color: #0ea5e9 !important;
+  --mdc-outlined-text-field-focus-outline-color: #0ea5e9 !important;
+  --mdc-outlined-text-field-input-text-color: #f8fafc !important;
+  --mdc-outlined-text-field-label-text-color: #94a3b8 !important;
+}
+
+/* Modificar el color de los Dropdowns y Selects */
+.mat-mdc-select-value-text {
+  color: #f8fafc !important;
+}
+.mdc-list-item__primary-text {
+  color: #f8fafc !important;
+}
+.mat-mdc-select-panel {
+  background-color: #1e293b !important;
+}

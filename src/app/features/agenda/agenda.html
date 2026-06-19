@@ -1,16 +1,16 @@
-<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem; padding-bottom: 4rem;">
+<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem; padding-bottom: 4rem; color: #f8fafc;">
   
-  <h2 style="color: #1976d2; font-size: 2.2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
-    <mat-icon style="font-size: 2.5rem; width: 2.5rem; height: 2.5rem;">event_note</mat-icon>
+  <h2 style="font-size: 2.2rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 10px; font-weight: 800;">
+    <mat-icon style="font-size: 2.5rem; width: 2.5rem; height: 2.5rem; color: #0ea5e9;">event_note</mat-icon>
     Agenda de Citas
   </h2>
 
   <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; align-items: start;">
     
-    <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-      <mat-card-header style="background-color: #f5f5f5; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">
-        <mat-card-title style="color: #333; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-          <mat-icon color="primary">add_circle</mat-icon> Nueva Cita
+    <mat-card style="background-color: #1e293b; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid #334155;">
+      <mat-card-header style="background-color: #0f172a; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #334155; margin-bottom: 1rem;">
+        <mat-card-title style="color: #0ea5e9; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+          <mat-icon>add_circle</mat-icon> Nueva Cita
         </mat-card-title>
       </mat-card-header>
 
@@ -20,13 +20,13 @@
           <mat-form-field appearance="outline">
             <mat-label>Nombre del Paciente</mat-label>
             <input matInput formControlName="paciente_nombre" placeholder="Ej. María López">
-            <mat-icon matSuffix>person</mat-icon>
+            <mat-icon matSuffix style="color: #94a3b8;">person</mat-icon>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Teléfono (WhatsApp)</mat-label>
             <input matInput formControlName="telefono" placeholder="Ej. 987654321" maxlength="9">
-            <mat-icon matSuffix>phone</mat-icon>
+            <mat-icon matSuffix style="color: #94a3b8;">phone</mat-icon>
             @if (citaForm.get('telefono')?.hasError('pattern')) {
               <mat-error>Debe empezar con 9 y tener 9 dígitos</mat-error>
             }
@@ -35,8 +35,8 @@
           <mat-form-field appearance="outline">
             <mat-label>Fecha de la Cita</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="fecha_ui">
-            <mat-hint>DD/MM/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-hint style="color: #64748b;">DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker" style="color: #0ea5e9;"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
 
@@ -54,7 +54,7 @@
             </mat-select>
           </mat-form-field>
 
-          <button mat-flat-button color="primary" type="submit" style="height: 50px; font-size: 1.1rem; border-radius: 8px;">
+          <button mat-flat-button type="submit" [disabled]="citaForm.invalid" style="background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; height: 50px; font-size: 1.1rem; border-radius: 8px; font-weight: bold; margin-top: 10px;">
             Agendar Turno
           </button>
         </form>
@@ -63,9 +63,9 @@
 
     <div style="display: flex; flex-direction: column; gap: 2rem;">
       
-      <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <mat-card-header style="background-color: #e3f2fd; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #bbdefb;">
-          <mat-card-title style="color: #1565c0; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+      <mat-card style="background-color: #1e293b; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid #334155;">
+        <mat-card-header style="background-color: #0f172a; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #334155;">
+          <mat-card-title style="color: #0ea5e9; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
             <mat-icon>view_agenda</mat-icon> Próximos Turnos
           </mat-card-title>
         </mat-card-header>
@@ -74,23 +74,20 @@
           @if (citasPendientes.length > 0) {
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               @for (cita of citasPendientes; track cita.id) {
-                <div style="border-left: 4px solid #1976d2; padding: 1rem; border-radius: 0 8px 8px 0; background: #fafafa; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                <div style="border-left: 4px solid #0ea5e9; padding: 1rem; border-radius: 0 8px 8px 0; background: #0f172a; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155;">
                   <div>
-                    <p style="margin: 0 0 5px 0; font-weight: bold; color: #333; font-size: 1.1rem;">{{ cita.paciente_nombre }}</p>
-                    <p style="margin: 0 0 5px 0; font-size: 0.9rem; color: #666; display: flex; align-items: center; gap: 5px;">
+                    <p style="margin: 0 0 5px 0; font-weight: bold; color: #f8fafc; font-size: 1.1rem;">{{ cita.paciente_nombre }}</p>
+                    <p style="margin: 0 0 5px 0; font-size: 0.9rem; color: #94a3b8; display: flex; align-items: center; gap: 5px;">
                       <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem;">schedule</mat-icon> 
                       {{ cita.fecha | date:'EEEE, dd MMM yyyy - hh:mm a' }}
                     </p>
-                    <p style="margin: 0; font-size: 0.85rem; color: #1976d2; font-weight: 500;">
+                    <p style="margin: 0; font-size: 0.85rem; color: #0ea5e9; font-weight: 500;">
                       Motivo: {{ cita.motivo }} | Tel: {{ cita.telefono }}
                     </p>
                   </div>
                   
-                  <!-- Contenedor para alinear el botón de WSP y el Selector -->
                   <div style="display: flex; gap: 10px; align-items: center; margin-bottom: -1.25rem;">
-                    
-                    <!-- NUEVO BOTÓN DE WHATSAPP -->
-                    <button mat-mini-fab style="background-color: #25D366; color: white; box-shadow: none;" (click)="notificarWhatsApp(cita)" title="Enviar WhatsApp al paciente">
+                    <button mat-mini-fab style="background-color: #10b981; color: white; box-shadow: 0 2px 8px rgba(16,185,129,0.4);" (click)="notificarWhatsApp(cita)" title="Enviar WhatsApp al paciente">
                       <mat-icon>chat</mat-icon>
                     </button>
 
@@ -101,14 +98,13 @@
                         <mat-option value="CANCELADO">CANCELAR</mat-option>
                       </mat-select>
                     </mat-form-field>
-
                   </div>
                 </div>
               }
             </div>
           } @else {
-            <div style="text-align: center; padding: 2rem 0; color: #757575;">
-              <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #bdbdbd; margin-bottom: 1rem;">event_available</mat-icon>
+            <div style="text-align: center; padding: 2rem 0; color: #64748b;">
+              <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #475569; margin-bottom: 1rem;">event_available</mat-icon>
               <p>No hay citas pendientes por el momento.</p>
             </div>
           }
@@ -116,9 +112,9 @@
       </mat-card>
 
       @if (citasPasadas.length > 0) {
-        <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); opacity: 0.8;">
-          <mat-card-header style="background-color: #eeeeee; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #e0e0e0;">
-            <mat-card-title style="color: #616161; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+        <mat-card style="background-color: #0f172a; border-radius: 12px; border: 1px solid #1e293b; box-shadow: none;">
+          <mat-card-header style="padding: 1rem 1.5rem; border-bottom: 1px solid #1e293b;">
+            <mat-card-title style="color: #64748b; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
               <mat-icon>history</mat-icon> Historial de Citas
             </mat-card-title>
           </mat-card-header>
@@ -126,18 +122,18 @@
           <mat-card-content style="padding: 1.5rem;">
             <div style="display: flex; flex-direction: column; gap: 0.8rem;">
               @for (cita of citasPasadas; track cita.id) {
-                <div [style.border-left]="cita.estado === 'COMPLETADO' ? '4px solid #4caf50' : '4px solid #d32f2f'" 
-                     style="padding: 0.8rem 1rem; border-radius: 0 6px 6px 0; background: #fafafa; display: flex; justify-content: space-between; align-items: center;">
+                <div [style.border-left]="cita.estado === 'COMPLETADO' ? '4px solid #10b981' : '4px solid #ef4444'" 
+                     style="padding: 0.8rem 1rem; border-radius: 0 6px 6px 0; background: #1e293b; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #334155; border-right: 1px solid #334155; border-bottom: 1px solid #334155;">
                   
                   <div>
-                    <p style="margin: 0 0 3px 0; font-weight: bold; color: #555;">{{ cita.paciente_nombre }}</p>
-                    <p style="margin: 0; font-size: 0.8rem; color: #777;">
+                    <p style="margin: 0 0 3px 0; font-weight: bold; color: #cbd5e1;">{{ cita.paciente_nombre }}</p>
+                    <p style="margin: 0; font-size: 0.8rem; color: #64748b;">
                       {{ cita.fecha | date:'dd/MM/yy - hh:mm a' }}
                     </p>
                   </div>
                   
-                  <span [style.background]="cita.estado === 'COMPLETADO' ? '#e8f5e9' : '#ffebee'"
-                        [style.color]="cita.estado === 'COMPLETADO' ? '#2e7d32' : '#c62828'"
+                  <span [style.background]="cita.estado === 'COMPLETADO' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)'"
+                        [style.color]="cita.estado === 'COMPLETADO' ? '#34d399' : '#f87171'"
                         style="padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold;">
                     {{ cita.estado }}
                   </span>

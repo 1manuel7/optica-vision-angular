@@ -1,62 +1,60 @@
-<div style="max-width: 1000px; margin: 0 auto;">
-  <mat-card style="padding: 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+<div style="max-width: 1000px; margin: 0 auto; color: #f8fafc;">
+  <mat-card style="background-color: #1e293b; border: 1px solid #334155; padding: 1rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
     
     <mat-card-header style="margin-bottom: 1rem;">
-      <mat-card-title style="color: #1976d2; font-size: 1.8rem;">Directorio de Pacientes</mat-card-title>
-      <mat-card-subtitle>Historial de pacientes registrados y sus medidas visuales</mat-card-subtitle>
+      <mat-card-title style="color: #0ea5e9; font-size: 1.8rem; font-weight: 800;">Directorio de Pacientes</mat-card-title>
+      <mat-card-subtitle style="color: #94a3b8;">Historial de pacientes registrados y sus medidas visuales</mat-card-subtitle>
     </mat-card-header>
     
     <mat-card-content>
       
       <div style="display: flex; gap: 15px; margin-bottom: 20px; align-items: center;">
-        
-        <div style="flex: 1; display: flex; align-items: center; background: #f5f5f5; border-radius: 8px; padding: 0 15px; border: 1px solid #e0e0e0;">
-          <mat-icon style="color: #757575; margin-right: 10px;">search</mat-icon>
+        <div style="flex: 1; display: flex; align-items: center; background: #0f172a; border-radius: 8px; padding: 0 15px; border: 1px solid #334155;">
+          <mat-icon style="color: #64748b; margin-right: 10px;">search</mat-icon>
           <input 
             type="text" 
             placeholder="Buscar paciente por Nombre o DNI..." 
             (input)="buscarPaciente($event)"
-            style="width: 100%; padding: 15px 0; border: none; background: transparent; font-size: 1rem; outline: none;"
+            style="color: #f8fafc; width: 100%; padding: 15px 0; border: none; background: transparent; font-size: 1rem; outline: none;"
           >
         </div>
 
-        <button mat-raised-button (click)="exportarAExcel()" style="background-color: #217346; color: white; padding: 25px 20px; border-radius: 8px; font-weight: bold; font-size: 1rem;">
+        <button mat-raised-button (click)="exportarAExcel()" style="background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 25px 20px; border-radius: 8px; font-weight: bold; font-size: 1rem; box-shadow: none;">
           <mat-icon style="margin-right: 8px;">table_view</mat-icon>
           Exportar a Excel
         </button>
-
       </div>
 
-      <table mat-table [dataSource]="pacientesFiltrados" style="width: 100%; border: 1px solid #e0e0e0; border-radius: 8px;">
+      <table mat-table [dataSource]="pacientesFiltrados" style="width: 100%; border: 1px solid #334155; border-radius: 8px; background-color: transparent;">
         
         <ng-container matColumnDef="dni">
-          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> DNI </th>
-          <td mat-cell *matCellDef="let paciente"> {{paciente.dni}} </td>
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #0f172a; color: #94a3b8; border-bottom: 1px solid #334155;"> DNI </th>
+          <td mat-cell *matCellDef="let paciente" style="color: #cbd5e1; border-bottom: 1px solid #334155;"> {{paciente.dni}} </td>
         </ng-container>
 
         <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Nombre Completo </th>
-          <td mat-cell *matCellDef="let paciente"> <strong>{{paciente.nombre}}</strong> </td>
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #0f172a; color: #94a3b8; border-bottom: 1px solid #334155;"> Nombre Completo </th>
+          <td mat-cell *matCellDef="let paciente" style="color: #f8fafc; border-bottom: 1px solid #334155;"> <strong>{{paciente.nombre}}</strong> </td>
         </ng-container>
 
         <ng-container matColumnDef="telefono">
-          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Teléfono </th>
-          <td mat-cell *matCellDef="let paciente"> {{paciente.telefono}} </td>
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #0f172a; color: #94a3b8; border-bottom: 1px solid #334155;"> Teléfono </th>
+          <td mat-cell *matCellDef="let paciente" style="color: #cbd5e1; border-bottom: 1px solid #334155;"> {{paciente.telefono}} </td>
         </ng-container>
 
         <ng-container matColumnDef="receta">
-          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Medida (ESF) </th>
-          <td mat-cell *matCellDef="let paciente"> 
-            <span style="background: #e3f2fd; color: #1565c0; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem;">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #0f172a; color: #94a3b8; border-bottom: 1px solid #334155;"> Medida (ESF) </th>
+          <td mat-cell *matCellDef="let paciente" style="border-bottom: 1px solid #334155;"> 
+            <span style="background: rgba(14, 165, 233, 0.15); color: #38bdf8; padding: 4px 8px; border-radius: 12px; font-size: 0.85rem; font-weight: bold;">
               OD: {{paciente.esferaOD}} | OI: {{paciente.esferaOI}}
             </span>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="acciones">
-          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #f5f5f5;"> Perfil </th>
-          <td mat-cell *matCellDef="let paciente"> 
-            <button mat-button color="primary" (click)="verPerfil(paciente.id)" style="font-weight: bold;">
+          <th mat-header-cell *matHeaderCellDef style="font-weight: bold; background: #0f172a; color: #94a3b8; border-bottom: 1px solid #334155;"> Perfil </th>
+          <td mat-cell *matCellDef="let paciente" style="border-bottom: 1px solid #334155;"> 
+            <button mat-button style="color: #0ea5e9; font-weight: bold;" (click)="verPerfil(paciente.id)">
               Ver Historial ➔
             </button>
           </td>
@@ -67,8 +65,8 @@
       </table>
 
       @if (pacientesFiltrados.length === 0) {
-        <div style="text-align: center; padding: 3rem; color: #757575;">
-          <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #bdbdbd; margin-bottom: 1rem;">person_search</mat-icon>
+        <div style="text-align: center; padding: 3rem; color: #64748b;">
+          <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #475569; margin-bottom: 1rem;">person_search</mat-icon>
           <p style="font-size: 1.2rem; margin: 0;">No se encontraron pacientes con esa búsqueda.</p>
         </div>
       }

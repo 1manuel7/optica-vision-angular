@@ -1,13 +1,13 @@
-<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem; padding-bottom: 4rem;">
+<div style="max-width: 1200px; margin: 2rem auto; padding: 0 1rem; padding-bottom: 4rem; color: #f8fafc;">
   
   <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-    <h2 style="color: #333; font-size: 2rem; margin: 0; display: flex; align-items: center; gap: 10px;">
-      <mat-icon style="color: #1976d2; font-size: 2.2rem; width: 2.2rem; height: 2.2rem;">account_circle</mat-icon>
+    <h2 style="font-size: 2rem; margin: 0; display: flex; align-items: center; gap: 10px; font-weight: 800;">
+      <mat-icon style="color: #0ea5e9; font-size: 2.2rem; width: 2.2rem; height: 2.2rem;">account_circle</mat-icon>
       Perfil Clínico del Paciente
     </h2>
     <div>
-      <button mat-button (click)="volver()" style="color: #555;">⬅ Volver al Directorio</button>
-      <button mat-raised-button style="background-color: #1976d2; color: white; margin-left: 15px; border-radius: 8px;" (click)="imprimirReceta()">
+      <button mat-button (click)="volver()" style="color: #94a3b8;">⬅ Volver al Directorio</button>
+      <button mat-raised-button style="background: linear-gradient(135deg, #0ea5e9, #2563eb); color: white; margin-left: 15px; border-radius: 8px; font-weight: bold;" (click)="imprimirReceta()">
         <mat-icon>print</mat-icon>
         Imprimir Receta PDF
       </button>
@@ -15,16 +15,16 @@
   </div>
 
   @if (cargando) {
-    <p style="text-align: center; color: #666; font-size: 1.2rem; margin-top: 2rem;">Cargando perfil clínico...</p>
+    <p style="text-align: center; color: #64748b; font-size: 1.2rem; margin-top: 2rem;">Cargando perfil clínico...</p>
   } @else if (pacienteActual) {
     
     <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; align-items: start;">
       
       <div style="display: flex; flex-direction: column; gap: 2rem;">
         
-        <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-          <mat-card-header style="background-color: #f5f5f5; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #e0e0e0; margin-bottom: 1rem;">
-            <mat-card-title style="color: #1976d2; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+        <mat-card style="background-color: #1e293b; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid #334155;">
+          <mat-card-header style="background-color: #0f172a; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #334155; margin-bottom: 1rem;">
+            <mat-card-title style="color: #0ea5e9; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
               <mat-icon>edit_document</mat-icon> Actualizar Datos y Receta
             </mat-card-title>
           </mat-card-header>
@@ -38,64 +38,56 @@
                 <mat-form-field appearance="outline"><mat-label>Teléfono</mat-label><input matInput formControlName="telefono"></mat-form-field>
               </div>
 
-              <mat-divider style="margin: 0.5rem 0;"></mat-divider>
+              <mat-divider style="margin: 0.5rem 0; border-color: #334155;"></mat-divider>
               
-              <h3 style="margin: 0; color: #d32f2f;">Ojo Derecho (OD)</h3>
+              <h3 style="margin: 0; color: #f87171;">Ojo Derecho (OD)</h3>
               <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
                 <mat-form-field appearance="outline"><mat-label>Esfera (ESF)</mat-label><input matInput formControlName="esferaOD"></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Cilindro (CIL)</mat-label><input matInput formControlName="cilindroOD"></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Eje</mat-label><input matInput formControlName="ejeOD"></mat-form-field>
               </div>
 
-              <h3 style="margin: 0.5rem 0 0; color: #1976d2;">Ojo Izquierdo (OI)</h3>
+              <h3 style="margin: 0.5rem 0 0; color: #38bdf8;">Ojo Izquierdo (OI)</h3>
               <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
                 <mat-form-field appearance="outline"><mat-label>Esfera (ESF)</mat-label><input matInput formControlName="esferaOI"></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Cilindro (CIL)</mat-label><input matInput formControlName="cilindroOI"></mat-form-field>
                 <mat-form-field appearance="outline"><mat-label>Eje</mat-label><input matInput formControlName="ejeOI"></mat-form-field>
               </div>
 
-              <button mat-flat-button color="primary" type="submit" [disabled]="pacienteForm.invalid" style="height: 50px; font-size: 1.1rem; border-radius: 8px; margin-top: 1rem;">
-                💾 Guardar Cambios en la Nube
+              <button mat-flat-button type="submit" [disabled]="pacienteForm.invalid" style="background: linear-gradient(135deg, #10b981, #059669); color: white; height: 50px; font-size: 1.1rem; border-radius: 8px; margin-top: 1rem; font-weight: bold;">
+                💾 Guardar Cambios
               </button>
             </form>
           </mat-card-content>
         </mat-card>
 
-        <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border: 1px solid #ce93d8;">
-          <mat-card-header style="background: linear-gradient(135deg, #f3e5f5, #e1bee7); padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #ce93d8;">
-            <mat-card-title style="color: #6a1b9a; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+        <mat-card style="background-color: #1e293b; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid #7e22ce;">
+          <mat-card-header style="background-color: #3b0764; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #7e22ce;">
+            <mat-card-title style="color: #d8b4fe; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
               <mat-icon>auto_awesome</mat-icon> Asistente Clínico IA
             </mat-card-title>
           </mat-card-header>
 
           <mat-card-content style="padding: 1.5rem;">
-            <p style="color: #555; margin-bottom: 1.5rem;">Genera un análisis optométrico automático y recomendaciones personalizadas basadas en la medida actual del paciente utilizando Inteligencia Artificial.</p>
+            <p style="color: #94a3b8; margin-bottom: 1.5rem;">Genera un análisis optométrico automático y recomendaciones personalizadas basadas en la medida actual del paciente utilizando Inteligencia Artificial.</p>
 
-            <button mat-flat-button style="background-color: #9c27b0; color: white; width: 100%; height: 50px; font-size: 1.1rem; border-radius: 8px;" (click)="generarAnalisisIA()" [disabled]="cargandoIA">
-              @if (cargandoIA) {
-                <mat-icon style="animation: spin 2s linear infinite;">hourglass_empty</mat-icon>
-              } @else {
-                <mat-icon>psychology</mat-icon>
-              }
-              
-              @if (cargandoIA) {
-                <span>Analizando medidas...</span>
-              } @else {
-                <span>Generar Recomendación Profesional</span>
-              }
+            <button mat-flat-button style="background: linear-gradient(135deg, #a855f7, #7e22ce); color: white; width: 100%; height: 50px; font-size: 1.1rem; border-radius: 8px; font-weight: bold;" (click)="generarAnalisisIA()" [disabled]="cargandoIA">
+              @if (cargandoIA) { <mat-icon style="animation: spin 2s linear infinite;">hourglass_empty</mat-icon> } 
+              @else { <mat-icon>psychology</mat-icon> }
+              <span>{{ cargandoIA ? 'Analizando medidas...' : 'Generar Recomendación Profesional' }}</span>
             </button>
 
             @if (analisisIA) {
-              <div style="margin-top: 1.5rem; padding: 1.5rem; background-color: #fafafa; border-radius: 8px; border-left: 5px solid #ab47bc; font-size: 1rem; line-height: 1.6; color: #333; white-space: pre-wrap; font-family: 'Roboto', sans-serif;">
+              <div style="margin-top: 1.5rem; padding: 1.5rem; background-color: #0f172a; border-radius: 8px; border-left: 5px solid #a855f7; font-size: 1rem; line-height: 1.6; color: #e2e8f0; white-space: pre-wrap;">
                 {{ analisisIA }}
               </div>
             }
           </mat-card-content>
         </mat-card>
 
-        <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-          <mat-card-header style="background-color: #e3f2fd; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #bbdefb;">
-            <mat-card-title style="color: #1565c0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+        <mat-card style="background-color: #1e293b; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid #334155;">
+          <mat-card-header style="background-color: #0f172a; padding: 1rem 1.5rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #334155;">
+            <mat-card-title style="color: #0ea5e9; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
               <mat-icon>insights</mat-icon> Evolución de Medida (Dioptrías)
             </mat-card-title>
           </mat-card-header>
@@ -103,16 +95,14 @@
             <div style="height: 250px; width: 100%;">
               <canvas id="graficoEvolucion"></canvas>
             </div>
-            <p style="text-align: center; font-size: 0.85rem; color: #777; margin-top: 1rem; margin-bottom: 0;">
-              * Tendencia visual clínica de la medida de Esfera a lo largo del tiempo.
-            </p>
           </mat-card-content>
         </mat-card>
 
       </div>
-      <mat-card style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
-        <mat-card-header style="background-color: #e8f5e9; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #c8e6c9;">
-          <mat-card-title style="color: #2e7d32; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+      
+      <mat-card style="background-color: #1e293b; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); border: 1px solid #334155;">
+        <mat-card-header style="background-color: #0f172a; padding: 1rem; border-radius: 12px 12px 0 0; border-bottom: 1px solid #334155;">
+          <mat-card-title style="color: #10b981; font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
             <mat-icon>history</mat-icon> Historial de Órdenes
           </mat-card-title>
         </mat-card-header>
@@ -122,50 +112,50 @@
             <div style="display: flex; flex-direction: column; gap: 1rem;">
               
               @for (orden of historialOrdenes; track orden.id) {
-                <div style="border: 1px solid #e0e0e0; padding: 1rem; border-radius: 8px; background: #fafafa; position: relative;">
+                <div style="border: 1px solid #334155; padding: 1rem; border-radius: 8px; background: #0f172a; position: relative;">
                   
                   <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
-                    <p style="margin: 0; font-size: 0.85rem; color: #666; display: flex; align-items: center; gap: 4px;">
+                    <p style="margin: 0; font-size: 0.85rem; color: #94a3b8; display: flex; align-items: center; gap: 4px;">
                       <mat-icon style="font-size: 1rem; width: 1rem; height: 1rem;">event</mat-icon> 
                       {{ orden.fecha | date:'dd/MM/yyyy hh:mm a' }}
                     </p>
                     
                     <div style="display: flex; gap: 8px;">
-                      <button mat-icon-button style="color: #ef6c00; background: #fff3e0; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;" (click)="enviarTicketCorreo(orden)" title="Enviar Ticket por Correo">
+                      <button mat-icon-button style="color: #fbbf24; background: rgba(245,158,11,0.1); width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;" (click)="enviarTicketCorreo(orden)" title="Enviar Ticket">
                         <mat-icon style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem;">mail</mat-icon>
                       </button>
-                      <button mat-icon-button style="color: #1976d2; background: #e3f2fd; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;" (click)="imprimirTicket(orden)" title="Imprimir Ticket de Venta">
+                      <button mat-icon-button style="color: #0ea5e9; background: rgba(14,165,233,0.1); width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;" (click)="imprimirTicket(orden)" title="Imprimir Ticket">
                         <mat-icon style="font-size: 1.2rem; width: 1.2rem; height: 1.2rem;">receipt_long</mat-icon>
                       </button>
                     </div>
                   </div>
                   
-                  <p style="margin: 0 0 0.5rem 0; font-weight: bold; color: #333; font-size: 1.05rem;">
+                  <p style="margin: 0 0 0.5rem 0; font-weight: bold; color: #f8fafc; font-size: 1.05rem;">
                     {{ orden.montura?.marca || 'Lente' }} - {{ orden.montura?.modelo || 'Genérico' }}
                   </p>
                   
-                  <div style="font-size: 0.85rem; color: #555; margin-bottom: 0.8rem; background: #fff; padding: 8px; border-radius: 6px; border: 1px dashed #ccc;">
+                  <div style="font-size: 0.85rem; color: #cbd5e1; margin-bottom: 0.8rem; background: #1e293b; padding: 8px; border-radius: 6px; border: 1px dashed #475569;">
                     <div style="display: flex; justify-content: space-between;"><span>Total:</span> <strong>S/ {{ orden.monto_total || 0 }}</strong></div>
                     <div style="display: flex; justify-content: space-between;"><span>A cuenta:</span> <strong>S/ {{ orden.adelanto || 0 }}</strong></div>
                     
-                    <div style="display: flex; justify-content: space-between; color: #d32f2f; margin-top: 4px; border-top: 1px solid #eee; padding-top: 4px; align-items: center;">
+                    <div style="display: flex; justify-content: space-between; color: #f87171; margin-top: 4px; border-top: 1px solid #334155; padding-top: 4px; align-items: center;">
                       <span>Saldo Pendiente:</span> <strong>S/ {{ (orden.monto_total || 0) - (orden.adelanto || 0) }}</strong>
                     </div>
 
                     @if ((orden.monto_total || 0) - (orden.adelanto || 0) > 0) {
-                      <button mat-button style="background-color: #4caf50; color: white; width: 100%; margin-top: 12px; border-radius: 6px; font-weight: bold;" (click)="pagarSaldo(orden)">
-                        <mat-icon style="margin-right: 5px;">payments</mat-icon> Registrar Pago de Saldo
+                      <button mat-button style="background-color: #10b981; color: white; width: 100%; margin-top: 12px; border-radius: 6px; font-weight: bold;" (click)="pagarSaldo(orden)">
+                        <mat-icon style="margin-right: 5px;">payments</mat-icon> Pagar Saldo
                       </button>
                     }
-                    </div>
+                  </div>
 
                   <div>
                     @if (orden.estado === 'PENDIENTE') {
-                      <span style="background-color: #ffebee; color: #c62828; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">{{ orden.estado }}</span>
+                      <span style="background-color: rgba(239, 68, 68, 0.2); color: #f87171; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(239,68,68,0.5);">{{ orden.estado }}</span>
                     } @else if (orden.estado === 'EN PROCESO') {
-                      <span style="background-color: #fff3e0; color: #ef6c00; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">{{ orden.estado }}</span>
+                      <span style="background-color: rgba(245, 158, 11, 0.2); color: #fbbf24; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(245,158,11,0.5);">{{ orden.estado }}</span>
                     } @else {
-                      <span style="background-color: #e8f5e9; color: #2e7d32; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold;">{{ orden.estado }}</span>
+                      <span style="background-color: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; border: 1px solid rgba(16,185,129,0.5);">{{ orden.estado }}</span>
                     }
                   </div>
 
@@ -174,9 +164,9 @@
 
             </div>
           } @else {
-            <div style="text-align: center; padding: 2rem 0; color: #757575;">
-              <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #bdbdbd; margin-bottom: 1rem;">inbox</mat-icon>
-              <p>Este paciente no tiene compras registradas.</p>
+            <div style="text-align: center; padding: 2rem 0; color: #64748b;">
+              <mat-icon style="font-size: 3rem; width: 3rem; height: 3rem; color: #475569; margin-bottom: 1rem;">inbox</mat-icon>
+              <p>Sin compras registradas.</p>
             </div>
           }
         </mat-card-content>
