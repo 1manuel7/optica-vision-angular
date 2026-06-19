@@ -113,4 +113,26 @@ export class AgendaComponent implements OnInit {
       title: `Estado cambiado a ${estado}`
     });
   }
+
+  // --- NUEVA FUNCIÓN: ENVIAR WHATSAPP ---
+  notificarWhatsApp(cita: Cita) {
+    // Le agregamos el código de Perú (+51) al número validado
+    const numero = `51${cita.telefono}`;
+    
+    // Formateamos la fecha para que se lea bonito en el mensaje
+    const fechaObj = new Date(cita.fecha);
+    const fechaFormateada = fechaObj.toLocaleDateString('es-PE', {
+      weekday: 'long', day: 'numeric', month: 'long'
+    });
+    const horaFormateada = fechaObj.toLocaleTimeString('es-PE', {
+      hour: '2-digit', minute: '2-digit', hour12: true
+    });
+
+    // Armamos el texto predeterminado
+    const mensaje = `¡Hola ${cita.paciente_nombre}! 👋 Te escribimos de la Óptica para recordarte tu cita de *${cita.motivo}* programada para el ${fechaFormateada} a las ${horaFormateada}. ¿Nos confirmas tu asistencia?`;
+    
+    // Abrimos WhatsApp Web en una pestaña nueva
+    const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+    window.open(url, '_blank');
+  }
 }

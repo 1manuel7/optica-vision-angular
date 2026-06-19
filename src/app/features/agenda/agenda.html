@@ -85,13 +85,24 @@
                       Motivo: {{ cita.motivo }} | Tel: {{ cita.telefono }}
                     </p>
                   </div>
-                  <mat-form-field appearance="outline" style="width: 140px; margin-bottom: -1.25rem;">
-                    <mat-select [value]="cita.estado" (selectionChange)="cambiarEstado(cita.id!, $event.value)">
-                      <mat-option value="PENDIENTE">PENDIENTE</mat-option>
-                      <mat-option value="COMPLETADO">COMPLETAR</mat-option>
-                      <mat-option value="CANCELADO">CANCELAR</mat-option>
-                    </mat-select>
-                  </mat-form-field>
+                  
+                  <!-- Contenedor para alinear el botón de WSP y el Selector -->
+                  <div style="display: flex; gap: 10px; align-items: center; margin-bottom: -1.25rem;">
+                    
+                    <!-- NUEVO BOTÓN DE WHATSAPP -->
+                    <button mat-mini-fab style="background-color: #25D366; color: white; box-shadow: none;" (click)="notificarWhatsApp(cita)" title="Enviar WhatsApp al paciente">
+                      <mat-icon>chat</mat-icon>
+                    </button>
+
+                    <mat-form-field appearance="outline" style="width: 140px;">
+                      <mat-select [value]="cita.estado" (selectionChange)="cambiarEstado(cita.id!, $event.value)">
+                        <mat-option value="PENDIENTE">PENDIENTE</mat-option>
+                        <mat-option value="COMPLETADO">COMPLETAR</mat-option>
+                        <mat-option value="CANCELADO">CANCELAR</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                  </div>
                 </div>
               }
             </div>

@@ -4,6 +4,7 @@ import { MonturaDetailComponent } from './features/montura-detail/montura-detail
 import { LoginComponent } from './features/auth/login/login';
 // IMPORTANTE: Importamos nuestro nuevo candado
 import { authGuard } from './core/guards/auth-guard';
+import { adminGuard } from './core/guards/admin.guard'; // <-- NUEVO GUARD IMPORTADO
 import { PacienteRegistroComponent } from './features/pacientes/paciente-registro/paciente-registro';
 import { PacienteListComponent } from './features/pacientes/paciente-list/paciente-list';
 import { OrdenListComponent } from './features/ordenes/orden-list/orden-list';
@@ -44,7 +45,7 @@ export const routes: Routes = [
   { 
     path: 'dashboard', 
     component: HomeComponent,
-    canActivate: [authGuard] 
+    canActivate: [authGuard, adminGuard] // <-- SOLO ADMIN PUEDE VER EL DASHBOARD
   },
   { 
     path: 'directorio', 

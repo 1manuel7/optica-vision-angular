@@ -4,7 +4,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon'; 
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import emailjs from '@emailjs/browser'; // <-- 1. IMPORTAMOS EMAILJS
+import emailjs from '@emailjs/browser'; 
+import Swal from 'sweetalert2'; // <-- IMPORTAMOS ALERTAS
 
 import { OrdenService } from '../../../core/services/orden';
 import { PacienteService } from '../../../core/services/paciente';
@@ -40,15 +41,17 @@ export class HomeComponent implements OnInit, AfterViewInit {
   cuentasPorCobrar = 0;  // Lo que te deben los pacientes
   monturasAgotadas: Montura[] = [];
 
+  // <-- NUEVO: Guardamos toda la data pura para exportarla
+  todasLasOrdenes: any[] = []; 
+
   // VARIABLES PARA LA IA
   analisisIA: string = '';
   cargandoIA: boolean = false;
-  
-  // <-- 2. VARIABLE PARA CONTROLAR EL ESTADO DEL ENVÍO DE CORREO
   enviandoCorreo: boolean = false;
 
   ngOnInit() {
     this.ordenService.ordenes$.subscribe(ordenes => {
+      this.todasLasOrdenes = ordenes; // <-- Guardamos la data
       this.totalVentas = ordenes.length;
       
       // Lógica Financiera Real
@@ -93,7 +96,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
-  // <-- 3. NUEVA FUNCIÓN: ENVIAR REPORTE DE IA POR CORREO ---
+  // ENVIAR REPORTE DE IA POR CORREO
   async enviarAlertaAdmin() {
     if (!this.analisisIA) return;
     
@@ -101,26 +104,77 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
 
     const templateParams = {
-      to_email: 'manu.migue001@gmail.com', // ⚠️ REEMPLAZA CON EL CORREO DONDE QUIERES RECIBIR LA ALERTA
+      to_email: 'manu.migue001@gmail.com',
       mensaje_alerta: this.analisisIA,
       fecha: new Date().toLocaleDateString()
     };
 
     try {
       await emailjs.send(
-        'service_9lkhpzq',             // ⚠️ REEMPLAZA CON TU SERVICE ID
-        'template_evqk322', // ⚠️ REEMPLAZA CON EL ID DE TU NUEVA PLANTILLA
+        'service_9lkhpzq',             
+        'template_evqk322', 
         templateParams,
-        'cY_7usaVDwoY1DtN-'              // ⚠️ REEMPLAZA CON TU PUBLIC KEY
+        'cY_7usaVDwoY1DtN-'              
       );
-      alert('📧 ¡Alerta logística enviada con éxito al correo del administrador!');
+      Swal.fire('¡Enviado!', 'Alerta logística enviada con éxito al correo del administrador.', 'success');
     } catch (error) {
       console.error('Error al enviar alerta por correo:', error);
-      alert('❌ No se pudo enviar el correo. Revisa la consola.');
+      Swal.fire('Error', 'No se pudo enviar el correo. Revisa la consola.', 'error');
     } finally {
       this.enviandoCorreo = false;
       this.cdr.detectChanges();
     }
+  }
+
+  // --- NUEVA FUNCIÓN: EXPORTAR A EXCEL (CSV) ---
+  exportarDatosExcel() {
+    if (this.todasLasOrdenes.length === 0) {
+      Swal.fire('Sin Datos', 'No hay ventas registradas para exportar.', 'info');
+      return;
+    }
+
+    // 1. Agregar el BOM (Byte Order Mark) para que Excel reconozca las tildes y las "ñ"
+    const BOM = '\uFEFF';
+    
+    // 2. Cabeceras del Excel
+    let csv = BOM + 'Fecha de Venta,Paciente,DNI,Montura,Estado,Total (S/),Adelanto (S/),Deuda (S/)\n';
+
+    // 3. Recorremos todas las órdenes y armamos las filas
+    this.todasLasOrdenes.forEach(orden => {
+      const fecha = new Date(orden.fecha).toLocaleDateString('es-PE');
+      
+      // Limpiamos comas de los textos para que no rompan las columnas del Excel
+      const paciente = `${orden.paciente?.nombre || ''} ${orden.paciente?.apellido || ''}`.replace(/,/g, '');
+      const dni = orden.paciente?.dni || 'S/N';
+      const montura = `${orden.montura?.marca || ''} - ${orden.montura?.modelo || ''}`.replace(/,/g, '');
+      const estado = orden.estado || 'DESCONOCIDO';
+      
+      const total = Number(orden.monto_total) || 0;
+      const adelanto = Number(orden.adelanto) || 0;
+      const deuda = total - adelanto;
+
+      // Agregamos la fila al archivo
+      csv += `${fecha},${paciente},${dni},${montura},${estado},${total},${adelanto},${deuda}\n`;
+    });
+
+    // 4. Crear el archivo físico y forzar la descarga en el navegador
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = window.URL.createObjectURL(blob);
+    const enlace = document.createElement('a');
+    enlace.href = url;
+    enlace.download = `Reporte_Gerencial_Optica_${new Date().getTime()}.csv`;
+    enlace.click();
+    window.URL.revokeObjectURL(url);
+
+    // 5. Alerta de éxito elegante
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 3000,
+      icon: 'success',
+      title: '📊 Reporte descargado con éxito'
+    });
   }
 
   crearGrafico() {
